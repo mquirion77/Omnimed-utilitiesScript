@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         Cucumber pimper
 // @namespace    http://tampermonkey.net/
-// @version      2.2
+// @version      2.3
 // @description  Pimp cucumber reports
 // @author       mquiron, mcormier, nguillet, shenault
-// @match        https://jenkins.omnimed.com/*/job/*/cucumber-html-reports/*overview-tags.html
+// @match        https://jenkins.omnimed.com/*job/*/cucumber-html-reports/*overview-tags.html
 // @grant        none
 // ==/UserScript==
 $( document ).ready(function() {
@@ -45,14 +45,14 @@ function colorCucumberTags() {
 	colorCucumberTagForQA('ChampConfidentiel', 'Nic');
 	colorCucumberTagForQA('Compte', 'Nic');
 
-   	colorCucumberTagForQA('DossierPatientBoiteSommaire', 'Nic');
+	colorCucumberTagForQA('DossierPatientBoiteSommaire', 'Nic');
 	colorCucumberTagForQA('Dictionnaire', 'Nic');
 	colorCucumberTagForQA('Droits', 'Nic');
 	colorCucumberTagForQA('DSQ', 'Moc');
 
-    	colorCucumberTagForQA('Elevio', 'Moc');
+	colorCucumberTagForQA('Elevio', 'Moc');
 	colorCucumberTagForQA('Etiquette', 'Nic');
-    	colorCucumberTagForQA('ExpirationSession', 'Nic');
+	colorCucumberTagForQA('ExpirationSession', 'Nic');
 
 	colorCucumberTagForQA('GuideUtilisateur', 'Moc');
 
@@ -61,11 +61,11 @@ function colorCucumberTags() {
 	colorCucumberTagForQA('Immunisation', 'Val');
 
 	colorCucumberTagForQA('ListeResultat', 'Nic');
-   	 colorCucumberTagForQA('LR', 'Nic');
+	colorCucumberTagForQA('LR', 'Nic');
 	colorCucumberTagForQA('ListeTaches', 'Nic');
 
 	colorCucumberTagForQA('MaladieChronique', 'Nic');
-    	colorCucumberTagForQA('MenuOmnimed', 'Nic');
+	colorCucumberTagForQA('MenuOmnimed', 'Nic');
 
 	colorCucumberTagForQA('NC', 'Nic');
 	colorCucumberTagForQA('Note', 'Nic');
@@ -86,7 +86,7 @@ function colorCucumberTags() {
 	colorCucumberTagForQA('RevisionNotes', 'Nic');
 	colorCucumberTagForQA('RevisionResultats', 'Nic');
 	colorCucumberTagForQA('RevisionTaches', 'Nic');
-    	colorCucumberTagForQA('RR', 'Nic');
+	colorCucumberTagForQA('RR', 'Nic');
 
 	colorCucumberTagForQA('SalleDAttente', 'Val');
 	colorCucumberTagForQA('SmokedTest', 'Nic');
