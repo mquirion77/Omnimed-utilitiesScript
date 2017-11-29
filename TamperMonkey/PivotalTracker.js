@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Pivotal Tracker Enhanced
 // @namespace    https://www.pivotaltracker.com/
-// @version      0.41
+// @version      0.42
 // @description  Pivotal Tracker enhanced for Omnimed
 // @author       Omnimed
 // @match        https://www.pivotaltracker.com/*
@@ -670,8 +670,9 @@ $.getDiff = function() {
     var tickets = prompt("Please enter your last stories and chores from the old sprintPlanning sheet", "");
     var re = /https[^\]]*/g;
 
-    if (tickets != null) {
-        var lastUrls = tickets.match(re);var sprintSheet = "";
+    if (tickets !== null) {
+        var lastUrls = tickets.match(re);
+        var sprintSheet = "";
         var urls = [];
         var diffSheet = "";
         var totalMin = 0;
@@ -696,6 +697,17 @@ $.getDiff = function() {
             chores.push(chore);
             urls.push(chore.id);
         });
+
+        var bugs = [];
+        getBug().children('.name').each(function(){
+            var bug = {name:"", id:"", usp:""};
+            bug.id = "https://www.pivotaltracker.com/story/show/" + $(this).parent().parent().attr("data-id");
+            bug.name = $(this).children('.story_name').text();
+            bug.usp = $(this).parent().children('.meta').text();
+            bugs.push(bug);
+            urls.push(bug.id);
+        });
+
         diffSheet += "## Scope creep Minus \n";
         $.each(lastUrls, function() {
             var found = false;
@@ -707,8 +719,12 @@ $.getDiff = function() {
             }
             if (!found) {
                 var info = getInfoFromUrl(this.toString());
-                totalMin += parseInt($(info).children().children('.meta').text());
-                diffSheet += "* [" + $(info).children().children().children('.story_name').text() + "](" + this.toString() + ") - " + $(info).children().children('.meta').text() + "pts\n";
+                if (info) {
+                    totalMin += parseInt($(info).children().children('.meta').text());
+                    diffSheet += "* [" + $(info).children().children().children('.story_name').text() + "](" + this.toString() + ") - " + $(info).children().children('.meta').text() + "pts\n";
+                } else {
+                    diffSheet += "* [Deleted Story](" + this.toString() + ") - ? pts\n";
+                }
             }
         });
         diffSheet += "\n## Scope creep Plus \n";
@@ -733,6 +749,13 @@ $.getDiff = function() {
                     if (chores[i].id === this.toString()) {
                         totalPlus += parseInt(chores[i].usp);
                         diffSheet += "* [" + chores[i].name + "](" + chores[i].id + ") - " + chores[i].usp + "pts\n";
+                    }
+                }
+                i = 0;
+                for (i = 0; i < bugs.length; i++) {
+                    if (bugs[i].id === this.toString()) {
+                        totalPlus += parseInt(bugs[i].usp);
+                        diffSheet += "* [" + bugs[i].name + "](" + bugs[i].id + ") - " + bugs[i].usp + "pts\n";
                     }
                 }
             }
