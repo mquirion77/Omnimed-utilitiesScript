@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Pivotal Tracker Enhanced
 // @namespace    https://www.pivotaltracker.com/
-// @version      0.42
+// @version      0.43
 // @description  Pivotal Tracker enhanced for Omnimed
 // @author       Omnimed
 // @match        https://www.pivotaltracker.com/*
@@ -176,7 +176,6 @@ $( document ).bind("ajaxSuccess",function(event, xhr, settings) {
             }, 1100);
         });
         updateIcons();
-        validateStories();
         highlightLabelsNeedSomething();
     }
 });
