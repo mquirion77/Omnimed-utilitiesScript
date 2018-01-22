@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Pivotal Tracker Enhanced
 // @namespace    https://www.pivotaltracker.com/
-// @version      0.43
+// @version      0.44
 // @description  Pivotal Tracker enhanced for Omnimed
 // @author       Omnimed
 // @match        https://www.pivotaltracker.com/*
@@ -136,8 +136,8 @@ $( document ).bind("ajaxSuccess",function(event, xhr, settings) {
                 bindNewTextarea();
             }, 100);
         });
-        $('body').find("a[class*='button add_story']").unbind("click");
-        $('body').find("a[class*='button add_story']").bind("click", function(){
+        $('body').find("a[class*='addButton___3-z3g3BH']").unbind("click");
+        $('body').find("a[class*='addButton___3-z3g3BH']").bind("click", function(){
             setTimeout(function() {
                 bindNewTextarea();
             }, 100);
