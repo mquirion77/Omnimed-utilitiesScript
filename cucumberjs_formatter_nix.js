@@ -1,60 +1,63 @@
-/**
-Fixes some display error in teamcity.
-*/
-
-function log(message) {
+var fs = require('fs')
+function unixLogger(message) {
   message += "\n";
   console.log(message);
 }
 
-function JetBrainsSMListener() {
+function windowsLogger(message) {
+  message += "\n";
+  fs.writeSync(1, message);
+  fs.fsyncSync(1);
+}
+
+function buildHandlers(useMilliseconds) {
+    var log = process.platform === 'win32' ? windowsLogger : unixLogger
     var currentFeature;
     var lastFailedTestName = null;
+    return {
+        BeforeFeatures: handleBeforeFeaturesEvent,
+        BeforeFeature: handleBeforeFeatureEvent,
+        BeforeScenario: handleBeforeScenario,
+        BeforeStep: handleBeforeStep,
+        StepResult: handleStepResult,
+        AfterScenario: handleAfterScenario,
+        AfterFeature: handleAfterFeatureEvent,
+        AfterFeatures: handleAfterFeaturesEvent
+    };
 
-    this.StepResult(function handleStepResult(event, callback) {
-        var stepResult = event.getPayloadItem('stepResult');
-        var step = stepResult.getStep();
+    function handleStepResult(event, callback) {
+        var stepResult = getStepResult(event);
+        var step = stepResult.getStep ? stepResult.getStep() : stepResult.step;
         var message;
-        var stepName = step.getName();
 
-        if (stepName !== undefined) {
-            stepName = stepName.replace(/'|\|/gi, " ");
-        } else {
-          stepName = "Generic stepName";
-        }
-
-        if (lastFailedTestName != null && lastFailedTestName == step.getName()) {
+        if (lastFailedTestName != null && lastFailedTestName == getName(step)) {
           callback();
           return;
         }
         lastFailedTestName = null;
 
-        if (stepResult.getStatus() == "skipped" || stepResult.getStatus() == "pending") {
+        if (getStatus(stepResult) == "skipped" || getStatus(stepResult) == "pending") {
             message = "##teamcity[testIgnored name = 'Step: %s' message = 'Skipped step' timestamp = '%s']\n";
-            message = message.replace('%s', stepName);
+            message = message.replace('%s', getName(step));
             message = message.replace('%s', getCurrentDate());
             log(message);
-        } else if (stepResult.getStatus() == "undefined") {
+        } else if (getStatus(stepResult) == "undefined") {
             message = "##teamcity[testFailed timestamp = '%s' details = '' message = 'Undefined step: %s' name = 'Step: %s' error = 'true']\n";
             message = message.replace('%s', getCurrentDate());
-            message = message.replace('%s', stepName);
-            message = message.replace('%s', stepName);
+            message = message.replace('%s', getName(step));
+            message = message.replace('%s', getName(step));
             log(message);
-        } else if(stepResult.getStatus() == "failed") {
-            lastFailedTestName = stepName;
-            var exception = stepResult.getFailureException();
+        } else if(getStatus(stepResult) == "failed") {
+            lastFailedTestName = getName(step);
+            var exception = stepResult.getFailureException ? stepResult.getFailureException() : stepResult.failureException;
 
-            var stack = "";
-            if (exception.stack && typeof exception.stack !== 'undefined') {
-                stack = exception.stack.toString();
-            }
-
+            var stack = exception.stack != null ? exception.stack.toString() : '';
             stack = stack.replace(/\|/g, "||").replace(/\n/g, "|n").replace(/\r/g, "|r").replace(/'/g, "|'").replace(/\[/g, "|[").replace(/\]/g, "|]");
             message = "##teamcity[testFailed timestamp = '%s' details = '%s' message = '%s' name = 'Step: %s']\n";
             message = message.replace('%s', getCurrentDate());
             message = message.replace('%s', stack);
             message = message.replace('%s', '');
-            message = message.replace('%s', stepName);
+            message = message.replace('%s', getName(step));
             log(message);
 
             message = "##teamcity[customProgressStatus timestamp='%s' type='testFailed']\n";
@@ -66,14 +69,15 @@ function JetBrainsSMListener() {
         time = getCurrentDate();
         message = message.replace('%s', time);
         message = message.replace('%s', time);
-        message = message.replace('%s', Math.round(stepResult.getDuration() / 1000000));
-        message = message.replace('%s', stepName);
+        var duration = (stepResult.getDuration ? stepResult.getDuration() : stepResult.duration) || 0;
+        message = message.replace('%s', Math.round(duration / (useMilliseconds ? 1000 : 1000000)));
+        message = message.replace('%s', getName(step));
         log(message);
 
         callback();
-    });
+    }
 
-    this.BeforeFeatures(function handleBeforeFeaturesEvent(event, callback) {
+    function handleBeforeFeaturesEvent(_, callback) {
         var message = "##teamcity[enteredTheMatrix timestamp = '%s']\n";
         message = message.replace('%s', getCurrentDate());
         log(message);
@@ -82,46 +86,39 @@ function JetBrainsSMListener() {
         message = message.replace('%s', getCurrentDate());
         log(message);
         callback();
-    });
+    }
 
-    this.BeforeFeature(function(event, callback) {
-        var feature = event.getPayloadItem('feature');
+    function handleBeforeFeatureEvent(event, callback) {
+        var feature = getFeature(event);
         currentFeature = feature;
         var message = "##teamcity[testSuiteStarted timestamp = '%s' locationHint = 'file:///%s' name = 'Feature: %s']\n";
         message = message.replace('%s', getCurrentDate());
-        message = message.replace('%s', feature.getUri() + ':' + feature.getLine());
-        message = message.replace('%s', feature.getName().replace(/'|\|/gi, " "));
+        message = message.replace('%s', getUri(feature) + ':' + getLine(feature));
+        message = message.replace('%s', getName(feature));
         log(message);
 
         callback();
-    });
+    }
 
-    this.AfterFeature(function handleAfterFeatureEvent(event, callback) {
-        var feature = event.getPayloadItem('feature');
+    function handleAfterFeatureEvent(event, callback) {
+        var feature = getFeature(event);
         var message = "##teamcity[testSuiteFinished timestamp = '%s' name = 'Feature: %s']\n";
         message = message.replace('%s', getCurrentDate());
-        message = message.replace('%s', feature.getName().replace(/'|\|/gi, " "));
+        message = message.replace('%s', getName(feature));
         log(message);
 
         callback();
-    });
+    }
 
-    this.BeforeStep(function handleBeforeScenarioEvent(event, callback) {
-        var step = event.getPayloadItem('step');
+    function handleBeforeStep(event, callback) {
+        var step = getStep(event);
         testStarted(step);
 
         callback();
-    });
+    }
 
-    this.BeforeScenario(function handleBeforeScenario(event, callback) {
-        var scenario = event.getPayloadItem('scenario');
-        var scenarioName = scenario.getName();
-
-        if (scenarioName !== undefined) {
-          scenarioName = scenarioName.replace(/'|\|/gi, " ");
-        } else {
-          scenarioName = "Generic scenarioName";
-        }
+    function handleBeforeScenario(event, callback) {
+        var scenario = getScenario(event);
 
         var message = "##teamcity[customProgressStatus type = 'testStarted' timestamp = '%s']\n";
         message = message.replace('%s', getCurrentDate());
@@ -129,36 +126,74 @@ function JetBrainsSMListener() {
 
         message = "##teamcity[testSuiteStarted timestamp = '%s' locationHint = 'file:///%s' name = 'Scenario: %s']\n";
         message = message.replace('%s', getCurrentDate());
-        message = message.replace('%s', scenario.getUri() + ':' + scenario.getLine());
-        message = message.replace('%s', scenarioName);
+        message = message.replace('%s', getUri(scenario) + ':' + getLine(scenario));
+        message = message.replace('%s', getName(scenario));
         log(message);
         callback();
-    });
+    }
 
-    this.AfterScenario(function handleAfterScenario(event, callback) {
-        var scenario = event.getPayloadItem('scenario');
-        var scenarioName = scenario.getName();
-
-        if (scenarioName !== undefined) {
-          scenarioName = scenarioName.replace(/'|\|/gi, " ");
-        } else {
-          scenarioName = "Generic scenarioName";
-        }
+    function handleAfterScenario(event, callback) {
+        var scenario = getScenario(event)
 
         var message = "##teamcity[testSuiteFinished timestamp = '%s' name = 'Scenario: %s']\n";
         message = message.replace('%s', getCurrentDate());
-        message = message.replace('%s', scenarioName);
+        message = message.replace('%s', getName(scenario));
         log(message);
         callback();
-    });
+    }
 
-
-    this.AfterFeatures(function handleAfterFeaturesEvent(event, callback) {
+    function handleAfterFeaturesEvent(_, callback) {
         var message = "##teamcity[customProgressStatus testsCategory = '' count = '0' timestamp = '%s']\n";
         message = message.replace('%s', getCurrentDate());
         log(message);
         callback();
-    });
+    }
+
+    function getStatus(stepResult) {
+        return stepResult.getStatus? stepResult.getStatus(): stepResult.status;
+    }
+
+    function getLine(obj) {
+        return obj.getLine? obj.getLine(): obj.line;
+    }
+
+    function getName(obj) {
+			var name = obj.getName ? obj.getName(): obj.name;
+
+			return name ? name.replace(/'|\|/gi, " ") : "Generic name";
+    }
+
+    function getUri(obj) {
+        return obj.getUri ? obj.getUri() : obj.uri;
+    }
+
+    function getFeature(eventOrFeature) {
+        if (eventOrFeature.getUri == null && eventOrFeature.getPayloadItem != null) {
+            return eventOrFeature.getPayloadItem('feature')
+        }
+        return eventOrFeature
+    }
+
+    function getScenario(eventOrScenario) {
+        if (eventOrScenario.getUri == null && eventOrScenario.getPayloadItem != null) {
+            return eventOrScenario.getPayloadItem('scenario')
+        }
+        return eventOrScenario
+    }
+
+    function getStep(eventOrStep) {
+        if (eventOrStep.getUri == null && eventOrStep.getPayloadItem != null) {
+            return eventOrStep.getPayloadItem('step')
+        }
+        return eventOrStep
+    }
+
+    function getStepResult(eventOrStepResult) {
+        if (eventOrStepResult.getFailureException == null && eventOrStepResult.getPayloadItem != null) {
+            return eventOrStepResult.getPayloadItem('stepResult')
+        }
+        return eventOrStepResult
+    }
 
     function adjustToLength(number, length) {
         result = '' + number;
@@ -191,19 +226,14 @@ function JetBrainsSMListener() {
     }
 
     function testStarted(step) {
-        var stepName = step.getName();
-        if (stepName !== undefined) {
-	        stepName = stepName.replace(/'|\|/gi, " ");
-        } else {
-          stepName = "Generic stepName";
-        }
-
         var message = "##teamcity[testStarted timestamp = '%s' locationHint = 'file:///%s' captureStandardOutput = 'true' name = 'Step: %s']\n";
         message = message.replace("%s", getCurrentDate());
-        message = message.replace("%s", step.getUri() + ':' + step.getLine());
-        message = message.replace("%s", stepName);
+        message = message.replace("%s", getUri(step) + ':' + getLine(step));
+        message = message.replace("%s", getName(step));
         log(message);
     }
 }
 
-module.exports = JetBrainsSMListener;
+module.exports = {
+    buildHandlers: buildHandlers,
+}
