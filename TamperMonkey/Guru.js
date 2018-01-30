@@ -1,17 +1,18 @@
 // ==UserScript==
-// @name       Guru utility script
-// @namespace  
-// @version       0.1
-// @description  Guru utility script
-// @match        https://app.getguru.com*
-// @copyright    2017+, Omnimed.com
+// @name         Guru HD
+// @namespace    http://omnimed.com/
+// @version      0.1
+// @description  View HD
+// @match        https://app.getguru.com/*
+// @grant        none
+// @require      https://code.jquery.com/jquery-2.1.4.min.js
 // ==/UserScript==
 
+(function() {
+    'use strict';
 
-document.addEventListener("DOMSubtreeModified", function() {
-    if (document.getElementsByClassName('ghq-factcard-maximized')[0]) {
-        if (document.getElementsByClassName('ghq-factcard-maximized')[0].style) {
-            document.getElementsByClassName('ghq-factcard-maximized')[0].style.width = "100%";
-        }
-    }
-});
+    jQuery(document).bind('DOMSubtreeModified', function() {
+        jQuery('.ghq-factcard-maximized').css('width', '1800px');
+        jQuery('.ghq-fact-editor__editors-and-sidebar').css('width', '1800px');
+    });
+})();
