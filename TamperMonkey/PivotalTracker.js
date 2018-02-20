@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Pivotal Tracker Enhanced
 // @namespace    https://www.pivotaltracker.com/
-// @version      0.44
+// @version      0.45
 // @description  Pivotal Tracker enhanced for Omnimed
 // @author       Omnimed
 // @match        https://www.pivotaltracker.com/*
@@ -41,7 +41,12 @@ $( document ).ready(function() {
     $("<style type='text/css'> .shadowIcon:before{ background-image:url(https://raw.githubusercontent.com/Omnimed/Omnimed-utilitiesScript/master/TamperMonkey/image/shadow.png) !important;} </style>").appendTo("head");
     $("<style type='text/css'> .onAirIcon:before{ background-image:url(https://raw.githubusercontent.com/Omnimed/Omnimed-utilitiesScript/master/TamperMonkey/image/onair.png) !important;} </style>").appendTo("head");
     $("<style type='text/css'> .invalidStory .preview { background-color: #fb9595 !important;} </style>").appendTo("head");
-    $("<style type='text/css'> .labelNeed { background-color: red !important; color: white !important; border-radius: 5px ; padding: 0px 5px 0px 5px; margin-right: 2px; } </style>").appendTo("head");
+    $("head").append("<style type='text/css'>\n" +
+    ".labelNeed { background-color: #4d5258 !important; color: white !important; border-radius: 5px ; padding: 0px 5px 0px 5px; margin-right: 2px; }\n" +
+    ".labelMustHave { background-color: #cc0000 !important; color: white !important; border-radius: 5px ; padding: 0px 5px 0px 5px; margin-right: 2px; }\n" +
+    ".labelShouldHave { background-color: #f0ab00 !important; color: white !important; border-radius: 5px ; padding: 0px 5px 0px 5px; margin-right: 2px;}\n" +
+    ".labelCouldHave { background-color: #0088ce !important; color: white !important; border-radius: 5px ; padding: 0px 5px 0px 5px; margin-right: 2px; }\n" +
+    "</style>");
 });
 
 function updateIcons() {
@@ -56,6 +61,7 @@ function updateFlyoverIcons() {
     $('.flyover.visible').find("a:contains('devops')").parent().parent().children('.meta').addClass( "devopsIcon" );
     $('.flyover.visible').find("a:contains('analyse')").parent().parent().children('.meta').addClass( "analyseIcon" );
     $('.flyover.visible').find("a:contains('shadow')").parent().parent().children('.meta').addClass( "shadowIcon" );
+    highlightLabels();
 }
 
 function validateStories() {
@@ -122,9 +128,12 @@ function validateStories() {
     }
 }
 
-function highlightLabelsNeedSomething() {
-    $( "a.label:contains('needs')" ).addClass('labelNeed');
-    $( "a.label:contains('besoin')" ).addClass('labelNeed');
+function highlightLabels() {
+    $("a.label:contains('needs')").addClass('labelNeed');
+    $("a.label:contains('besoin')").addClass('labelNeed');
+    $("a.label:contains('should have')").addClass('labelShouldHave');
+    $("a.label:contains('must have')").addClass('labelMustHave');
+    $("a.label:contains('could have')").addClass('labelCouldHave');
 }
 
 
@@ -149,6 +158,7 @@ $( document ).bind("ajaxSuccess",function(event, xhr, settings) {
                 update_chore();
                 update_feature();
                 update_output();
+                highlightLabels();
             }, 100);
         });setTimeout(function() {
             updateFlyoverIcons();
@@ -160,7 +170,6 @@ $( document ).bind("ajaxSuccess",function(event, xhr, settings) {
                 $('.autosaves.collapser').bind("click", function(){
                     setTimeout(function() {
                         updateIcons();
-                        highlightLabelsNeedSomething();
                         $('.autosaves.collapser').unbind("click");
                     }, 100);
                 });
@@ -176,7 +185,7 @@ $( document ).bind("ajaxSuccess",function(event, xhr, settings) {
             }, 1100);
         });
         updateIcons();
-        highlightLabelsNeedSomething();
+        highlightLabels();
     }
 });
 
@@ -937,3 +946,4 @@ $.getBroadcastNote = function() {
     console.log(broadcastNote);
     executeCopy(broadcastNote);
 };
+
