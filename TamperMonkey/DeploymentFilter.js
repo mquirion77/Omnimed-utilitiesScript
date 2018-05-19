@@ -13,11 +13,12 @@ var $ = jQuery;
 var procedures = new Array();
 var ref = $('h3#user-content-a-href-https-github-com-omnimed-omnimed-solutions-releases-releases-a').parent();
 
-function Procedure(date,env,tag,element) {
+function Procedure(date,env,tag,index,element) {
     this.date = date;
     this.env = env;
     this.tag = tag.substring(0,tag.lastIndexOf('.'));
     this.element = element.clone();
+    this.index = index;
 };
 
 function addListProcedure(id,title,procedures) {
@@ -46,25 +47,25 @@ function addMenu() {
     $('<div>', {
       html: [$('<h3>', {
           text: 'Date',
-          style: 'display: inline-block;',
+          style: 'display: inline-block;cursor: pointer;',
           click: filterByDate
       }),
             $('<h3>', {
           text: 'Environnement',
-          style: 'display: inline-block;padding-left: 10px;',
+          style: 'display: inline-block;padding-left: 10px;cursor: pointer;',
           click: filterByEnv
       }),
             $('<h3>', {
           text: 'Tag',
-          style: 'display: inline-block;padding-left: 10px;',
+          style: 'display: inline-block;padding-left: 10px;cursor: pointer;',
           click: filterByTag
       }),
             $('<h3>', {
           text: 'Original',
-          style: 'display: inline-block;padding-left: 10px;',
+          style: 'display: inline-block;padding-left: 10px;cursor: pointer;',
           click: showOriginal
       })],
-      style: ['position: fixed;top:0px;right: 30%;overflow-y: scroll;']
+      style: ['position: fixed;top:0px;right: 30%;']
     }).insertAfter($('.application-main'));
 }
 
@@ -85,6 +86,7 @@ function hideAll() {
 }
 
 function filterByDate() {
+    procedures.sort(sortByDate);
     hideAll();
     addListProcedure('ByDate','Filtre par date',procedures).insertAfter(ref);
 }
@@ -144,15 +146,26 @@ function showOriginal() {
 }
 
 function sortByDate(a,b) {
-        a = new Date(a.date);
-        b = new Date(b.date);
-        return a>b ? -1 : a<b ? 1 : 0;
+    var o1 = new Date(a.date);
+    var o2 = new Date(b.date);
+
+    if (o1 < o2) return 1;
+    if (o1 > o2) return -1;
+    return a.index-b.index;
 }
 
 function sortByTag(a,b) {
-        a = a.tag;
-        b = b.tag;
-        return a>b ? -1 : a<b ? 1 : 0;
+    var o1 = a.tag;
+    var o2 = b.tag;
+
+    var p1 = new Date(a.date);
+    var p2 = new Date(b.date);
+
+    if (o1 < o2) return 1;
+    if (o1 > o2) return -1;
+    if (p1 < p2) return 1;
+    if (p1 > p2) return -1;
+    return a.index-b.index;
 }
 
 $( document ).ready(function() {
@@ -160,9 +173,8 @@ $( document ).ready(function() {
     $("h3#user-content-procédures").next().find('p').each(function( index ) {
         var date = $( this ).text().split(" ")[0];
         var tag = $( this ).text().split(" ")[1].split("-");
-        procedures.push(new Procedure(date,tag[0],tag[2],$(this)));
+        procedures.push(new Procedure(date,tag[0],tag[2],index,$(this)));
     });
-    procedures.sort(sortByDate);
 
     addMenu();
 });
