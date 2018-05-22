@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Magic deployment screen
 // @namespace    http://tampermonkey.net/
-// @version      0.1
+// @version      0.2
 // @description  try to take over the world!
 // @author       ggirard
 // @match        https://github.com/Omnimed/Omnimed-wiki/wiki/D%C3%A9ploiement
@@ -47,22 +47,22 @@ function addMenu() {
     $('<div>', {
       html: [$('<h3>', {
           text: 'Date',
-          style: 'display: inline-block;cursor: pointer;',
+          style: 'display: inline-block;cursor: pointer;background: linear-gradient(#407045, #305530) !important;border-color: #083 !important;padding: 5px;color: silver;',
           click: filterByDate
       }),
             $('<h3>', {
           text: 'Environnement',
-          style: 'display: inline-block;padding-left: 10px;cursor: pointer;',
+          style: 'display: inline-block;margin-left: 10px;cursor: pointer;background: linear-gradient(#407045, #305530) !important;border-color: #083 !important;padding: 5px;color: silver;',
           click: filterByEnv
       }),
             $('<h3>', {
           text: 'Tag',
-          style: 'display: inline-block;padding-left: 10px;cursor: pointer;',
+          style: 'display: inline-block;margin-left: 10px;cursor: pointer;background: linear-gradient(#407045, #305530) !important;border-color: #083 !important;padding: 5px;color: silver;',
           click: filterByTag
       }),
             $('<h3>', {
           text: 'Original',
-          style: 'display: inline-block;padding-left: 10px;cursor: pointer;',
+          style: 'display: inline-block;margin-left: 10px;cursor: pointer;background: linear-gradient(#407045, #305530) !important;border-color: #083 !important;padding: 5px;color: silver;',
           click: showOriginal
       })],
       style: ['position: fixed;top:0px;right: 30%;']
