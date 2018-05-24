@@ -12,7 +12,7 @@
 
 var DISABLE_REFRESH = true;
 
-$ = jQuery;
+var $ = jQuery;
 
 $(function() {
     if (DISABLE_REFRESH && window.location.href.indexOf('norefresh') == -1) {
