@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Haproxy Helper
 // @namespace    http://www.omnimed.com/
-// @version      0.2
+// @version      0.3
 // @description  Adds some cool functionality to Haproxy Web Management Interface
 // @author       Omnimed
 // @match        http://*/stats*
@@ -22,7 +22,7 @@ $(function() {
     $(':checkbox').shiftcheckbox();
 
     $('th.pxname').each(function() {
-        $(this).prepend('<button style="float:left" onclick="toggleSection(this);return false;">- / +</button>');
+        $(this).prepend('<button style="float:left" onclick="toggleSection(this);return false;">- / +</button>').attr('width', '15%');
     });
 });
 
