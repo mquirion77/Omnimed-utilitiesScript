@@ -31,6 +31,9 @@ function colorCucumberTagForQA(tag, qa) {
 }
 
 function colorCucumberTags() {
+	colorCucumberTagForQA('ActionLogProblemes', 'Nic');
+	colorCucumberTagForQA('ActionLogSuppressionResultat', 'Nic');
+	colorCucumberTagForQA('ActionLogTaches', 'Nic');
 	colorCucumberTagForQA('Aide', 'Moc');
 	colorCucumberTagForQA('AjoutResultat', 'Nic');
 	colorCucumberTagForQA('Allergie', 'Val');
@@ -44,6 +47,7 @@ function colorCucumberTags() {
 	colorCucumberTagForQA('CentreAdmin', 'Val');
 	colorCucumberTagForQA('ChampConfidentiel', 'Nic');
 	colorCucumberTagForQA('Compte', 'Nic');
+	colorCucumberTagForQA('CreationDonnee', 'Nic');
 
 	colorCucumberTagForQA('DossierPatientBoiteSommaire', 'Nic');
 	colorCucumberTagForQA('Dictionnaire', 'Nic');
@@ -54,8 +58,8 @@ function colorCucumberTags() {
 	colorCucumberTagForQA('Etiquette', 'Nic');
 	colorCucumberTagForQA('ExpirationSession', 'Nic');
 
-	colorCucumberTagForQA('GuideUtilisateur', 'Moc');
-
+	colorCucumberTagForQA('GestionListeTaches', 'Nic');
+	
 	colorCucumberTagForQA('HabitudesDeVie', 'Nic');
 
 	colorCucumberTagForQA('Immunisation', 'Val');
@@ -85,9 +89,11 @@ function colorCucumberTags() {
 	colorCucumberTagForQA('Resultat', 'Nic');
 	colorCucumberTagForQA('RevisionNotes', 'Nic');
 	colorCucumberTagForQA('RevisionResultats', 'Nic');
-	colorCucumberTagForQA('RevisionTaches', 'Nic');
+	colorCucumberTagForQA('RevisionTache', 'Nic');
 	colorCucumberTagForQA('RR', 'Nic');
+	colorCucumberTagForQA('RVSQ', 'Moc');
 
+	colorCucumberTagForQA('SalleAttente', 'Val');
 	colorCucumberTagForQA('SalleDAttente', 'Val');
 	colorCucumberTagForQA('SmokedTest', 'Nic');
 	colorCucumberTagForQA('SQII', 'Moc');
