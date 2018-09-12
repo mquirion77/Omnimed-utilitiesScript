@@ -22,6 +22,8 @@
         'overflow': 'hidden'
     });
 
+    $('.edit-comment-hide').css({'height': '50px'});
+
     $('.repository-with-sidebar .repository-sidebar span:not(.octicon, .url-box-clippy)').css('display', 'none');
     //$('.repository-content, .context-loader-container').css('width', '97%');
     $('#files .diffstat+.css-truncate-target').removeClass('css-truncate css-truncate-target');
@@ -36,4 +38,8 @@
         $('span.css-truncate-target').removeClass('css-truncate css-truncate-target');
         $('.container .discussion-timeline').removeClass('discussion-timeline');
     });
+
+    $("<style type='text/css'> .clearfix::before{ display:none !important;} </style>").appendTo("head");
+    $("<style type='text/css'> .clearfix::after{ display:none !important;} </style>").appendTo("head");
+
 })();
