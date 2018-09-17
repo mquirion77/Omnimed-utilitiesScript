@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Pivotal Tracker Enhanced
 // @namespace    https://www.pivotaltracker.com/
-// @version      0.46
+// @version      0.47
 // @description  Pivotal Tracker enhanced for Omnimed
 // @author       Omnimed
 // @match        https://www.pivotaltracker.com/*
@@ -402,12 +402,13 @@ function update_output() {
     sumTotal = sumBug + sumChore + sumStory;
     $('.selectedStoriesControls__actions').css({"padding-left":"158px"});
     $('.selectedStoriesControls__counterLabel').append("<span id='story_Selected_sum' style='margin-left: 7px;'><span style='font-weight:bold;'>Story :</span> " + sumStory + "/" + countStory + " | <span style='font-weight:bold;'>Chore :</span> " + sumChore + "/" + countChore + " | <span style='font-weight:bold;'>Bug :</span> " + sumBug + "/" + countBug + " | <span style='font-weight:bold;'>Total</span> : " + sumTotal +
-                                                       "<div style='position: absolute;left: 46px;background-color: chocolate;width: 531px;height: 20px;padding-top: 2px;'>" +
+                                                       "<div style='position: absolute;left: 46px;background-color: chocolate;width: 600px;height: 20px;padding-top: 2px;'>" +
                                                        "<button class='selectedStoriesControls__button' style='font-weight:bold;' type='button' onClick='$.getReleaseNote()'>Release note</button>" +
                                                        "<button class='selectedStoriesControls__button' style='font-weight:bold;' type='button' onClick='$.getSprintSheet()'>Sprint sheet</button>" +
                                                        "<button class='selectedStoriesControls__button' style='font-weight:bold;' type='button' onClick='$.getPlanningPoker()'>PlanningPoker</button>" +
                                                        "<button class='selectedStoriesControls__button' style='font-weight:bold;' type='button' onClick='$.getDiff()'>Diff</button>" +
                                                        "<button class='selectedStoriesControls__button' style='font-weight:bold;' type='button' onClick='$.getBroadcastNote()'>Episode note</button>" +
+                                                       "<button class='selectedStoriesControls__button' style='font-weight:bold;' type='button' onClick='$.getIdList()'>Id list</button>" +
                                                        "</div>" +
                                                        "</span>");
 }
@@ -950,3 +951,22 @@ $.getBroadcastNote = function() {
     executeCopy(broadcastNote);
 };
 
+
+$.getIdList = function(){
+    var idList = [];
+    getFeature().children('.name').each(function(){
+        idList.push($(this).parent().parent().attr("data-id"));
+    });
+    getChore().children('.name').each(function(){
+        idList.push($(this).parent().parent().attr("data-id"));
+    });
+    getBug().children('.name').each(function(){
+        idList.push($(this).parent().parent().attr("data-id"));
+    });
+    var idString = "";
+    for (var i = 0; i < idList.length; i++) {
+        idString = idString + idList[i] + "\n";
+    }
+    console.log(idString);
+    executeCopy(idString);
+}
