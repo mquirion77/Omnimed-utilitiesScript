@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name       GitHub HD Resolution
 // @namespace
-// @version    2018.09-5
+// @version    2018.09-6
 // @description  Welcome to the year 2000s, HD Resolution is here !
 // @match      https://github.com/*
 // @copyright  2018+, Omnimed.com
@@ -20,7 +20,7 @@
     };
 
     $(document).ready(function() {
-        if ($('.file-wrap').length > 0) {
+        if ($('.file-wrap').length > 0 || $('.tabnav').length > 0) {
             $(document).bind('DOMSubtreeModified', function() {
                 resize();
             });
