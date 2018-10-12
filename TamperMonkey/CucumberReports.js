@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Cucumber pimper
 // @namespace    http://tampermonkey.net/
-// @version      2.4
+// @version      2.5
 // @description  Pimp cucumber reports
 // @author       mquiron, mcormier, nguillet, shenault
 // @match        https://jenkins.omnimed.com/*job/*/cucumber-html-reports/*overview-tags.html
@@ -31,6 +31,8 @@ function colorCucumberTagForQA(tag, qa) {
 }
 
 function colorCucumberTags() {
+    colorCucumberTagForQA('ActionLog', 'Nic');
+    colorCucumberTagForQA('ActionLogSignesVitaux', 'Nic');
 	colorCucumberTagForQA('ActionLogProblemes', 'Nic');
 	colorCucumberTagForQA('ActionLogSuppressionResultat', 'Nic');
 	colorCucumberTagForQA('ActionLogTaches', 'Nic');
@@ -62,7 +64,7 @@ function colorCucumberTags() {
 	
 	colorCucumberTagForQA('HabitudesDeVie', 'Nic');
 
-	colorCucumberTagForQA('Immunisation', 'Val');
+	colorCucumberTagForQA('Immunisation', 'Moc');
 
 	colorCucumberTagForQA('ListeResultat', 'Nic');
 	colorCucumberTagForQA('LR', 'Nic');
