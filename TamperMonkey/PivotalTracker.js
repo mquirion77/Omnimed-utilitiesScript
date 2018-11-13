@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Pivotal Tracker Enhanced
 // @namespace    https://www.pivotaltracker.com/
-// @version      0.48
+// @version      0.49
 // @description  Pivotal Tracker enhanced for Omnimed
 // @author       Omnimed
 // @match        https://www.pivotaltracker.com/*
@@ -424,7 +424,7 @@ $.getReleaseNote = function() {
         var story = {name:"", ep:"", prd:"", id:""};
         story.id = $(this).parent().parent().attr("data-id");
         story.prd = $(this).children('.labels').children('a:contains("prd")').first().text();
-        story.name = $(this).children('.story_name').text();
+        story.name = $(this).children('.story_name').children('.tracker_markup').text();
         if (story.prd === "") {
             story.prd ="prd - autre";
         } else if (story.prd.indexOf(",") > -1) {
@@ -449,7 +449,7 @@ $.getReleaseNote = function() {
     getChore().children('.name').each(function(){
         var chore = {name:"", prd:"", id:""};
         chore.id = $(this).parent().parent().attr("data-id");
-        chore.name = $(this).children('.story_name').text();
+        chore.name = $(this).children('.story_name').children('.tracker_markup').text();
         chore.prd = $(this).children('.labels').children('a:contains("prd")').first().text();
         if (chore.prd === "") {
             chore.prd ="prd - autre";
@@ -529,7 +529,7 @@ $.getSprintSheet = function() {
     getFeature().children('.name').each(function(){
         var story = {name:"", ep:"", id:""};
         story.id = $(this).parent().parent().attr("data-id");
-        story.name = $(this).children('.story_name').text();
+        story.name = $(this).children('.story_name').children('.tracker_markup').text();
         story.ep = $(this).children('.labels').children('a:contains("ep -")').first().text();
         if (story.ep === "") {
             story.ep ="ep - autre";
@@ -547,7 +547,7 @@ $.getSprintSheet = function() {
     getChore().children('.name').each(function(){
         var chore = {name:"", ep:"", id:""};
         chore.id = $(this).parent().parent().attr("data-id");
-        chore.name = $(this).children('.story_name').text();
+        chore.name = $(this).children('.story_name').children('.tracker_markup').text();
         chore.ep = $(this).children('.labels').children('a:contains("ep -")').first().text();
         if (chore.ep === "") {
             chore.ep ="ep - autre";
@@ -565,7 +565,7 @@ $.getSprintSheet = function() {
     getBug().children('.name').each(function(){
         var bug = {name:"", id:""};
         bug.id = $(this).parent().parent().attr("data-id");
-        bug.name = $(this).children('.story_name').text();
+        bug.name = $(this).children('.story_name').children('.tracker_markup').text();
         bugs.push(bug);
     });
 
@@ -661,7 +661,7 @@ $.getPlanningPoker = function() {
     getFeature().children('.name').each(function(){
         var story = {name:"", ep:"", id:""};
         story.id = $(this).parent().parent().attr("data-id");
-        story.name = $(this).children('.story_name').text();
+        story.name = $(this).children('.story_name').children('.tracker_markup').text();
         planningPokerList += "<a target='_blank' href='https://www.pivotaltracker.com/story/show/" + story.id + "'>" + story.name + "</a>\n";
     });
 
@@ -669,7 +669,7 @@ $.getPlanningPoker = function() {
     getChore().children('.name').each(function(){
         var chore = {name:"", ep:"", id:""};
         chore.id = $(this).parent().parent().attr("data-id");
-        chore.name = $(this).children('.story_name').text();
+        chore.name = $(this).children('.story_name').children('.tracker_markup').text();
         planningPokerList += "<a target='_blank' href='https://www.pivotaltracker.com/story/show/" + chore.id + "'>" + chore.name + "</a>\n";
     });
 
@@ -694,7 +694,7 @@ $.getDiff = function() {
         getFeature().children('.name').each(function(){
             var story = {name:"", id:"", usp:""};
             story.id = "https://www.pivotaltracker.com/story/show/" +$(this).parent().parent().attr("data-id");
-            story.name = $(this).children('.story_name').text();
+            story.name = $(this).children('.story_name').children('.tracker_markup').text();
             story.usp = $(this).parent().children('.meta').text();
             stories.push(story);
             urls.push(story.id);
@@ -704,7 +704,7 @@ $.getDiff = function() {
         getChore().children('.name').each(function(){
             var chore = {name:"", id:"", usp:""};
             chore.id = "https://www.pivotaltracker.com/story/show/" + $(this).parent().parent().attr("data-id");
-            chore.name = $(this).children('.story_name').text();
+            chore.name = $(this).children('.story_name').children('.tracker_markup').text();
             chore.usp = $(this).parent().children('.meta').text();
             chores.push(chore);
             urls.push(chore.id);
@@ -714,7 +714,7 @@ $.getDiff = function() {
         getBug().children('.name').each(function(){
             var bug = {name:"", id:"", usp:""};
             bug.id = "https://www.pivotaltracker.com/story/show/" + $(this).parent().parent().attr("data-id");
-            bug.name = $(this).children('.story_name').text();
+            bug.name = $(this).children('.story_name').children('.tracker_markup').text();
             bug.usp = $(this).parent().children('.meta').text();
             bugs.push(bug);
             urls.push(bug.id);
@@ -733,7 +733,7 @@ $.getDiff = function() {
                 var info = getInfoFromUrl(this.toString());
                 if (info) {
                     totalMin += parseInt($(info).children().children('.meta').text());
-                    diffSheet += "* [" + $(info).children().children().children('.story_name').text() + "](" + this.toString() + ") - " + $(info).children().children('.meta').text() + "pts\n";
+                    diffSheet += "* [" + $(info).children().children().children('.story_name').children('.tracker_markup').text() + "](" + this.toString() + ") - " + $(info).children().children('.meta').text() + "pts\n";
                 } else {
                     diffSheet += "* [Deleted Story](" + this.toString() + ") - ? pts\n";
                 }
@@ -798,7 +798,7 @@ $.getBroadcastNote = function() {
         if (story.broadcast.indexOf(",") > -1){
             story.broadcast = story.broadcast.substring(0,story.broadcast.indexOf(","));
         }
-        story.name = $(this).children('.story_name').text();
+        story.name = $(this).children('.story_name').children('.tracker_markup').text();
         story.ep = $(this).children('.labels').children('a:contains("ep -")').first().text();
         if (story.ep === "") {
             story.ep ="ep - autre";
@@ -834,7 +834,7 @@ $.getBroadcastNote = function() {
         if (chore.broadcast.indexOf(",") > -1){
             chore.broadcast = chore.broadcast.substring(0,chore.broadcast.indexOf(","));
         }
-        chore.name = $(this).children('.story_name').text();
+        chore.name = $(this).children('.story_name').children('.tracker_markup').text();
         chore.ep = $(this).children('.labels').children('a:contains("ep -")').first().text();
         if (chore.ep === "") {
             chore.ep ="ep - autre";
@@ -869,7 +869,7 @@ $.getBroadcastNote = function() {
         if (bug.broadcast.indexOf(",") > -1){
             bug.broadcast = bug.broadcast.substring(0,bug.broadcast.indexOf(","));
         }
-        bug.name = $(this).children('.story_name').text();
+        bug.name = $(this).children('.story_name').children('.tracker_markup').text();
         bug.ep = $(this).children('.labels').children('a:contains("ep -")').first().text();
         if (bug.ep === "") {
             bug.ep ="ep - autre";
