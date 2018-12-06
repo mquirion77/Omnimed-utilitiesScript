@@ -64,7 +64,7 @@ function updateFlyoverIcons() {
     highlightLabels();
 }
 
-function validateStories() {
+function validateStories() {
     /* Validate that all stories have a release tag */
     var firstId;
     var secondId;
@@ -221,7 +221,7 @@ function getBug() {
     return $('div[data-type="done"],div[data-type="current"],div[data-type="backlog"],div[data-type="icebox"]').find('.bug').children('.preview').children('.selected').parent();
 }
 
-function getAnalyseTemplate() {
+function getAnalyseTemplate() {
     if(!analyseTemplate) {
         var response;
         var xhr = new XMLHttpRequest();
@@ -237,7 +237,7 @@ function getAnalyseTemplate() {
     return analyseTemplate;
 }
 
-function getFeatureTemplate() {
+function getFeatureTemplate() {
     if(!featureTemplate) {
         var response;
         var xhr = new XMLHttpRequest();
@@ -253,7 +253,7 @@ function getFeatureTemplate() {
     return featureTemplate;
 }
 
-function getChoreTemplate() {
+function getChoreTemplate() {
     if(!choreTemplate) {
         var response;
         var xhr = new XMLHttpRequest();
@@ -269,7 +269,7 @@ function getChoreTemplate() {
     return choreTemplate;
 }
 
-function getBugTemplate() {
+function getBugTemplate() {
     if(!bugTemplate) {
         var response;
         var xhr = new XMLHttpRequest();
@@ -312,7 +312,7 @@ function getEpicInfo(epicLabel) {
     return response;
 }
 
-function applyStoriesValidation(stories,releaseName) {
+function applyStoriesValidation(stories,releaseName) {
     /* Validate that all stories have a release tag */
     for (var i = 0; i < stories.length; i++) {
         var hasGoodLabel = false;
