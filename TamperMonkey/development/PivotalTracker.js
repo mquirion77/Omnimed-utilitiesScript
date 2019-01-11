@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Pivotal Tracker Enhanced
 // @namespace    https://www.pivotaltracker.com/
-// @version      0.49
+// @version      0.50
 // @description  Pivotal Tracker enhanced for Omnimed
 // @author       Omnimed
 // @match        https://www.pivotaltracker.com/*
@@ -487,7 +487,7 @@ $.getReleaseNote = function() {
     $.each($.unique(produits.sort()), function() {
         releaseNote += "\n## " + this + "\n\n";
         var produit = this;
-        $.each($.unique(eps), function() {
+        $.each($.unique(eps.sort()), function() {
             var parameter = {
                 addLabel: true,
                 episode: this,
