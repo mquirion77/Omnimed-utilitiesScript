@@ -4,7 +4,7 @@
 // @version      0.1
 // @description  try to take over the world!
 // @author       ggirard
-// @match        https://github.com/Omnimed/Omnimed-solutions/branches
+// @match        https://github.com/Omnimed/Omnimed-solutions/branches*
 // @require      https://code.jquery.com/jquery-3.3.1.min.js
 // ==/UserScript==
 
