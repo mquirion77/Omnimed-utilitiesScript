@@ -46,6 +46,7 @@ $( document ).ready(function() {
     ".labelMustHave { background-color: #cc0000 !important; color: white !important; border-radius: 5px ; padding: 0px 5px 0px 5px; margin-right: 2px; }\n" +
     ".labelShouldHave { background-color: #f0ab00 !important; color: white !important; border-radius: 5px ; padding: 0px 5px 0px 5px; margin-right: 2px;}\n" +
     ".labelCouldHave { background-color: #0088ce !important; color: white !important; border-radius: 5px ; padding: 0px 5px 0px 5px; margin-right: 2px; }\n" +
+    ".labelFeatureBranch { background-color: #000000!important; color: white !important; border-radius: 10px ; padding: 0px 5px 0px 5px; margin-right: 2px; }\n" +
     "</style>");
 });
 
@@ -134,6 +135,7 @@ function highlightLabels() {
     $("a.label:contains('should have')").addClass('labelShouldHave');
     $("a.label:contains('must have')").addClass('labelMustHave');
     $("a.label:contains('could have')").addClass('labelCouldHave');
+    $("a.label:contains('feature-')").addClass('labelFeatureBranch');
 }
 
 
