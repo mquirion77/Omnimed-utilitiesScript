@@ -110,3 +110,4 @@ function setup() {
 }
 
 setup();
+$(window).resize();
