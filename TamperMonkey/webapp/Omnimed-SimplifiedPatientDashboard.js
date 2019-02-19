@@ -5,7 +5,7 @@
 // @updateURL    https://github.com/Omnimed/Omnimed-utilitiesScript/tree/master/TamperMonkey/webapp/
 // @description  Simplified version of the patient dashboard
 // @author       Kenny Côté
-// @match        https://www.omnimed.com/omnimed/do/dashboard/patientDashboard*
+// @match        https://*/omnimed/do/dashboard/*
 // @grant        none
 // ==/UserScript==
 
