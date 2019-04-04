@@ -3,14 +3,15 @@
 // @namespace    http://tampermonkey.net/
 // @version      2.5
 // @description  Pimp cucumber reports
-// @author       mquiron, mcormier, nguillet, shenault
+// @author       mquiron, mcormier, nguillet, shenault, marobert
 // @match        https://jenkins.omnimed.com/*job/*/cucumber-html-reports/*overview-tags.html
 // @grant        none
 // ==/UserScript==
-$( document ).ready(function() {
+$(document).ready(function () {
 	$("<style type='text/css'> .cukeMoc { background-color: black !important; color: white !important; } </style>").appendTo("head");
 	$("<style type='text/css'> .cukeNic { background-color: red !important; color: white !important; } </style>").appendTo("head");
 	$("<style type='text/css'> .cukeVal { background-color: blue !important; color: white !important; } </style>").appendTo("head");
+	$("<style type='text/css'> .cukeAll { background-color: grey !important; color: white !important; } </style>").appendTo("head");
 });
 
 function colorCucumberTagForQA(tag, qa) {
@@ -31,83 +32,63 @@ function colorCucumberTagForQA(tag, qa) {
 }
 
 function colorCucumberTags() {
-    colorCucumberTagForQA('ActionLog', 'Nic');
-    colorCucumberTagForQA('ActionLogSignesVitaux', 'Nic');
-	colorCucumberTagForQA('ActionLogProblemes', 'Nic');
-	colorCucumberTagForQA('ActionLogSuppressionResultat', 'Nic');
-	colorCucumberTagForQA('ActionLogTaches', 'Nic');
-	colorCucumberTagForQA('Aide', 'Moc');
-	colorCucumberTagForQA('AjoutResultat', 'Nic');
-	colorCucumberTagForQA('Allergie', 'Val');
-	colorCucumberTagForQA('Antecedents', 'Nic');
-	colorCucumberTagForQA('Aviseur', 'Nic');
+	var qa = '';
 
-	colorCucumberTagForQA('Beta', 'Moc');
+	//Nic
+	qa = 'Nic';
+	//----global---- //doit etre avant tous les tags specifiques des autres QA
+	colorCucumberTagForQA('ActionLog', qa);
+	colorCucumberTagForQA('Dossier', qa);
+	//----global---- //
+	colorCucumberTagForQA('Antecedent', qa);
+	colorCucumberTagForQA('AviseurHPN', qa);
+	colorCucumberTagForQA('Contexte', qa);
+	colorCucumberTagForQA('Habitude', qa);
+	//----Introduction----
+	colorCucumberTagForQA('Compte', qa);
+	colorCucumberTagForQA('Cas', qa);
+	colorCucumberTagForQA('Nouvelle', qa);
+	colorCucumberTagForQA('ExpirationSession', qa);
+	colorCucumberTagForQA('MenuOmnimed', qa);
+	colorCucumberTagForQA('ProfilUtilisateur', qa);
+	//----Introduction----
+	colorCucumberTagForQA('MaladieChronique', qa);
+	colorCucumberTagForQA('Note', qa);
+	colorCucumberTagForQA('Outil', qa);
+	colorCucumberTagForQA('Probleme', qa);
+	colorCucumberTagForQA('Dictionnaire', qa);
+	colorCucumberTagForQA('Programme', qa);
+	colorCucumberTagForQA('Requete', qa);
+	colorCucumberTagForQA('Resultat', qa);
+	colorCucumberTagForQA('Tache', qa);
+	colorCucumberTagForQA('UMF', qa);
+	colorCucumberTagForQA('Vitaux', qa);
 
-	colorCucumberTagForQA('CA', 'Val');
-	colorCucumberTagForQA('CAS', 'Nic');
-	colorCucumberTagForQA('CentreAdmin', 'Val');
-	colorCucumberTagForQA('ChampConfidentiel', 'Nic');
-	colorCucumberTagForQA('Compte', 'Nic');
-	colorCucumberTagForQA('CreationDonnee', 'Nic');
+	//Val
+	qa = 'Val';
+	colorCucumberTagForQA('Notification', qa);
+	colorCucumberTagForQA('RendezVous', qa);
+	colorCucumberTagForQA('SalleAttente', qa);
+	//----Securite----
+	colorCucumberTagForQA('Droit', qa);
+	colorCucumberTagForQA('Consentement', qa);
+	colorCucumberTagForQA('Mandat', qa);
+	//----Securite----
 
-	colorCucumberTagForQA('DossierPatientBoiteSommaire', 'Nic');
-	colorCucumberTagForQA('Dictionnaire', 'Nic');
-	colorCucumberTagForQA('Droits', 'Nic');
-	colorCucumberTagForQA('DSQ', 'Moc');
+	//Moc
+	qa = 'Moc';
+	colorCucumberTagForQA('Aide', qa);
+	colorCucumberTagForQA('Allergie', qa);
+	colorCucumberTagForQA('CentreAdmin', qa);
+	colorCucumberTagForQA('Cnesst', qa);
+	colorCucumberTagForQA('Dsq', qa);
+	colorCucumberTagForQA('Immunisation', qa);
+	colorCucumberTagForQA('Medication', qa);
 
-	colorCucumberTagForQA('Elevio', 'Moc');
-	colorCucumberTagForQA('Etiquette', 'Nic');
-	colorCucumberTagForQA('ExpirationSession', 'Nic');
-
-	colorCucumberTagForQA('GestionListeTaches', 'Nic');
-	
-	colorCucumberTagForQA('HabitudesDeVie', 'Nic');
-
-	colorCucumberTagForQA('Immunisation', 'Moc');
-
-	colorCucumberTagForQA('ListeResultat', 'Nic');
-	colorCucumberTagForQA('LR', 'Nic');
-	colorCucumberTagForQA('ListeTaches', 'Nic');
-
-	colorCucumberTagForQA('MaladieChronique', 'Nic');
-	colorCucumberTagForQA('MenuOmnimed', 'Nic');
-
-	colorCucumberTagForQA('NC', 'Nic');
-	colorCucumberTagForQA('Note', 'Nic');
-	colorCucumberTagForQA('Notification', 'Moc');
-	colorCucumberTagForQA('Nouvelles', 'Moc');
-
-	colorCucumberTagForQA('OC', 'Moc');
-
-	colorCucumberTagForQA('Patient', 'Val');
-	colorCucumberTagForQA('Prescripteur', 'Val');
-	colorCucumberTagForQA('Problemes', 'Nic');
-	colorCucumberTagForQA('Profil', 'Nic');
-	colorCucumberTagForQA('Programmes', 'Nic');
-
-	colorCucumberTagForQA('RendezVous', 'Val');
-	colorCucumberTagForQA('Requete', 'Nic');
-	colorCucumberTagForQA('Resultat', 'Nic');
-	colorCucumberTagForQA('RevisionNotes', 'Nic');
-	colorCucumberTagForQA('RevisionResultats', 'Nic');
-	colorCucumberTagForQA('RevisionTache', 'Nic');
-	colorCucumberTagForQA('RR', 'Nic');
-	colorCucumberTagForQA('RVSQ', 'Moc');
-
-	colorCucumberTagForQA('SalleAttente', 'Val');
-	colorCucumberTagForQA('SalleDAttente', 'Val');
-	colorCucumberTagForQA('SmokedTest', 'Nic');
-	colorCucumberTagForQA('SQII', 'Moc');
-	colorCucumberTagForQA('SQIL', 'Moc');
-	colorCucumberTagForQA('SQIM', 'Moc');
-	colorCucumberTagForQA('SignesVitaux', 'Nic');
-	colorCucumberTagForQA('SuppressionResultat', 'Nic');
-	colorCucumberTagForQA('SV', 'Nic');
-
-	colorCucumberTagForQA('Taches', 'Nic');
-
-	colorCucumberTagForQA('UMF', 'Nic');
+	//All
+	qa = 'All'
+	colorCucumberTagForQA('CreationDonnee', qa);
+	colorCucumberTagForQA('Exemple', qa);
 }
 
 colorCucumberTags();
