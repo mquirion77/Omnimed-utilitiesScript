@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Cucumber pimper
 // @namespace    http://tampermonkey.net/
-// @version      2.5
+// @version      3.0
 // @description  Pimp cucumber reports
 // @author       mquiron, mcormier, nguillet, shenault, marobert
 // @match        https://jenkins.omnimed.com/*job/*/cucumber-html-reports/*overview-tags.html
@@ -15,19 +15,11 @@ $(document).ready(function () {
 });
 
 function colorCucumberTagForQA(tag, qa) {
-	if (tag === 'CA') {
-		/* Special case: name conflits between CAS and CA. */
-		if ($('.tagname > a:contains(@CA):not(:contains(@CAS))').length !== 0) {
-			$('.tagname > a:contains(@CA):not(:contains(@CAS))').addClass('cuke' + qa);
-		} else {
-			console.warn('Cucumber tag ' + tag + ' does not exists');
-		}
+	if ($('.tagname > a:contains(' + tag + ')').length !== 0) {
+		$('.tagname > a:contains(' + tag + ')').removeClass('cukeNic', 'cukeVal', 'cukeMoc');
+		$('.tagname > a:contains(' + tag + ')').addClass('cuke' + qa);
 	} else {
-		if ($('.tagname > a:contains(@' + tag + ')').length !== 0) {
-			$('.tagname > a:contains(@' + tag + ')').addClass('cuke' + qa);
-		} else {
-			console.warn('Cucumber tag ' + tag + ' does not exists');
-		}
+		console.warn('Cucumber tag ' + tag + ' does not exists');
 	}
 }
 
@@ -37,20 +29,20 @@ function colorCucumberTags() {
 	//Nic
 	qa = 'Nic';
 	//----global---- //doit etre avant tous les tags specifiques des autres QA
-	colorCucumberTagForQA('ActionLog', qa);
-	colorCucumberTagForQA('Dossier', qa);
+	colorCucumberTagForQA('@ActionLog', qa);
+	colorCucumberTagForQA('@Dossier', qa);
 	//----global---- //
 	colorCucumberTagForQA('Antecedent', qa);
 	colorCucumberTagForQA('AviseurHPN', qa);
 	colorCucumberTagForQA('Contexte', qa);
 	colorCucumberTagForQA('Habitude', qa);
 	//----Introduction----
-	colorCucumberTagForQA('Compte', qa);
-	colorCucumberTagForQA('Cas', qa);
-	colorCucumberTagForQA('Nouvelle', qa);
-	colorCucumberTagForQA('ExpirationSession', qa);
-	colorCucumberTagForQA('MenuOmnimed', qa);
-	colorCucumberTagForQA('ProfilUtilisateur', qa);
+	colorCucumberTagForQA('@Compte', qa);
+	colorCucumberTagForQA('@Cas', qa);
+	colorCucumberTagForQA('@Nouvelle', qa);
+	colorCucumberTagForQA('@ExpirationSession', qa);
+	colorCucumberTagForQA('@MenuOmnimed', qa);
+	colorCucumberTagForQA('@ProfilUtilisateur', qa);
 	//----Introduction----
 	colorCucumberTagForQA('MaladieChronique', qa);
 	colorCucumberTagForQA('Note', qa);
@@ -61,34 +53,36 @@ function colorCucumberTags() {
 	colorCucumberTagForQA('Requete', qa);
 	colorCucumberTagForQA('Resultat', qa);
 	colorCucumberTagForQA('Tache', qa);
-	colorCucumberTagForQA('UMF', qa);
+	colorCucumberTagForQA('Umf', qa);
 	colorCucumberTagForQA('Vitaux', qa);
 
 	//Val
 	qa = 'Val';
-	colorCucumberTagForQA('Notification', qa);
-	colorCucumberTagForQA('RendezVous', qa);
+	colorCucumberTagForQA('@Notification', qa);
+	colorCucumberTagForQA('@RendezVous', qa);
 	colorCucumberTagForQA('SalleAttente', qa);
+	colorCucumberTagForQA('@RecherchePatient', qa);
 	//----Securite----
-	colorCucumberTagForQA('Droit', qa);
+	colorCucumberTagForQA('@Droit', qa);
 	colorCucumberTagForQA('Consentement', qa);
 	colorCucumberTagForQA('Mandat', qa);
 	//----Securite----
 
 	//Moc
 	qa = 'Moc';
-	colorCucumberTagForQA('Aide', qa);
+	colorCucumberTagForQA('@Aide', qa);
 	colorCucumberTagForQA('Allergie', qa);
-	colorCucumberTagForQA('CentreAdmin', qa);
+	colorCucumberTagForQA('@CentreAdmin', qa);
 	colorCucumberTagForQA('Cnesst', qa);
-	colorCucumberTagForQA('Dsq', qa);
-	colorCucumberTagForQA('Immunisation', qa);
-	colorCucumberTagForQA('Medication', qa);
+	colorCucumberTagForQA('@Dsq', qa);
+	colorCucumberTagForQA('@DossierImmunisation', qa);
+	colorCucumberTagForQA('@ActionLogImmunisation', qa);
+	colorCucumberTagForQA('@Medication', qa);
 
 	//All
 	qa = 'All'
-	colorCucumberTagForQA('CreationDonnee', qa);
-	colorCucumberTagForQA('Exemple', qa);
+	colorCucumberTagForQA('@CreationDonnee', qa);
+	colorCucumberTagForQA('@Exemple', qa);
 }
 
 colorCucumberTags();
