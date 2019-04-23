@@ -77,7 +77,7 @@ function colorCucumberTags() {
 	colorCucumberTagForQA('@Dsq', qa);
 	colorCucumberTagForQA('@DossierImmunisation', qa);
 	colorCucumberTagForQA('@ActionLogImmunisation', qa);
-	colorCucumberTagForQA('@Medication', qa);
+	colorCucumberTagForQA('Medication', qa);
 
 	//All
 	qa = 'All'
