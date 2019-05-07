@@ -25,7 +25,7 @@ $(document).ready(function() {
     }, 20000);
     setTimeout(function() {
         setInterval(function(){
-            if ($("div.MyoDDb").length < 2) {
+            if (parseInt($(".wnPUne.N0PJ8e").innerText) < 2) {
                 GM_xmlhttpRequest({
                     method: "GET",
                     url: botLigthUrl + "/off",
@@ -37,7 +37,7 @@ $(document).ready(function() {
         }, 300);
     }, endDate.getTime() - new Date().getTime());
     setInterval(function(){
-        if ($("div.MyoDDb").length < 2) {
+        if (parseInt($(".wnPUne.N0PJ8e").innerText) < 2) {
             if (currentState != 0) {
                 console.log("OFF");
                 currentState = 0;
