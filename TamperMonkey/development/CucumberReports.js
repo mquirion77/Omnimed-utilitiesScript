@@ -48,8 +48,6 @@ function colorCucumberTags() {
 	colorCucumberTagForQA('Consentement', qa);
 	colorCucumberTagForQA('Mandat', qa);
 	//----Securite----
-	colorCucumberTagForQA('Tache', qa);
-	colorCucumberTagForQA('Umf', qa);
 	colorCucumberTagForQA('Vitaux', qa);
 
 	//Mad (jay et Marc)
@@ -80,6 +78,10 @@ function colorCucumberTags() {
 	colorCucumberTagForQA('@DroitResultat', qa);
 	colorCucumberTagForQA('RevisionResultat', qa);
 	//----Resultat----
+	//----Tache----
+	colorCucumberTagForQA('Tache', qa);
+	colorCucumberTagForQA('Umf', qa);
+	//----Tache----
 	//----SessionOnimed----
 	colorCucumberTagForQA('@Cas', qa);
 	colorCucumberTagForQA('@ExpirationSession', qa);
