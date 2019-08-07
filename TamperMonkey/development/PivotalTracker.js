@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Pivotal Tracker Enhanced
 // @namespace    https://www.pivotaltracker.com/
-// @version      0.51
+// @version      0.52
 // @description  Pivotal Tracker enhanced for Omnimed
 // @author       Omnimed
 // @match        https://www.pivotaltracker.com/*
@@ -26,14 +26,6 @@ var inApiCall = false;
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
-
-$( document ).keypress(function( event ) {
-    if ( event.which == 97 ) {
-        setTimeout(function() {
-            bindNewTextarea();
-        }, 100);
-    }
-});
 
 $( document ).ready(function() {
     $("<style type='text/css'> .devopsIcon:before{ background-image:url(https://raw.githubusercontent.com/Omnimed/Omnimed-utilitiesScript/master/TamperMonkey/image/devops.png) !important;} </style>").appendTo("head");
@@ -141,18 +133,6 @@ function highlightLabels() {
 
 $( document ).bind("ajaxSuccess",function(event, xhr, settings) {
     if (xhr.responseJSON && xhr.responseJSON.data && (xhr.responseJSON.data.kind === "layout_scheme" || xhr.responseJSON.data.kind === "command_create_response" || (xhr.responseJSON.data.kind === "message" && xhr.responseJSON.data.text === "Subscribed to push changes")) ) {
-        $('body').find("button[class*='Sidebar__addStory___wMyRzEAE']").unbind("click");
-        $('body').find("button[class*='Sidebar__addStory___wMyRzEAE']").bind("click", function(){
-            setTimeout(function() {
-                bindNewTextarea();
-            }, 100);
-        });
-        $('body').find("a[class*='addButton___3-z3g3BH']").unbind("click");
-        $('body').find("a[class*='addButton___3-z3g3BH']").bind("click", function(){
-            setTimeout(function() {
-                bindNewTextarea();
-            }, 100);
-        });
         $('.selector').unbind("click");
         $('.selector').bind("click", function(){
             setTimeout(function() {
@@ -211,12 +191,6 @@ function applyTemplate() {
     }, 500);
     $('.new').find("div[class='DescriptionShow___3-QsNMNj tracker_markup']").unbind("click");
     $('.new').find("div[class='edit___2HbkmNDA']").unbind("click");
-}
-
-function bindNewTextarea() {
-    if ($('.new')) {
-        $('.new').find("div[class='DescriptionShow___3-QsNMNj DescriptionShow__placeholder___1NuiicbF']").bind("click", applyTemplate);
-    }
 }
 
 function getBug() {
