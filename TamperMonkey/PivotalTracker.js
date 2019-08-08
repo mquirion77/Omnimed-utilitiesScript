@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Pivotal Tracker Enhanced
 // @namespace    https://www.pivotaltracker.com/
-// @version      0.48
+// @version      0.52
 // @description  Pivotal Tracker enhanced for Omnimed
 // @author       Omnimed
 // @match        https://www.pivotaltracker.com/*
@@ -46,6 +46,7 @@ $( document ).ready(function() {
     ".labelMustHave { background-color: #cc0000 !important; color: white !important; border-radius: 5px ; padding: 0px 5px 0px 5px; margin-right: 2px; }\n" +
     ".labelShouldHave { background-color: #f0ab00 !important; color: white !important; border-radius: 5px ; padding: 0px 5px 0px 5px; margin-right: 2px;}\n" +
     ".labelCouldHave { background-color: #0088ce !important; color: white !important; border-radius: 5px ; padding: 0px 5px 0px 5px; margin-right: 2px; }\n" +
+    ".labelFeatureBranch { background-color: #000000!important; color: white !important; border-radius: 10px ; padding: 0px 5px 0px 5px; margin-right: 2px; }\n" +
     "</style>");
 });
 
@@ -64,7 +65,7 @@ function updateFlyoverIcons() {
     highlightLabels();
 }
 
-function validateStories() {
+function validateStories() {
     /* Validate that all stories have a release tag */
     var firstId;
     var secondId;
@@ -134,6 +135,7 @@ function highlightLabels() {
     $("a.label:contains('should have')").addClass('labelShouldHave');
     $("a.label:contains('must have')").addClass('labelMustHave');
     $("a.label:contains('could have')").addClass('labelCouldHave');
+    $("a.label:contains('feature-')").addClass('labelFeatureBranch');
 }
 
 
@@ -189,100 +191,8 @@ $( document ).bind("ajaxSuccess",function(event, xhr, settings) {
     }
 });
 
-function applyTemplate() {
-    var storyType = $('.new').find("input[name='story[story_type]']")[0].value;
-    var template = "";
-    setTimeout(function() {
-        if (storyType === "feature") {
-            if ( $('.new').find("div[class='Label___3rBeC38h Label--epic___2XSEYZ9W']")[0] && $('.new').find("div[class='Label___3rBeC38h Label--epic___2XSEYZ9W']")[0].children[0].outerText === "analyse") {
-                template = getAnalyseTemplate();
-            } else {
-                template = getFeatureTemplate();
-            }
-        } else if (storyType === "chore") {
-            template = getChoreTemplate();
-        } else if (storyType === "bug") {
-            template = getBugTemplate();
-        }
-        $(document.activeElement).val(template).change();
-        $(document.activeElement)[0].textContent = template;
-    }, 500);
-    $('.new').find("div[class='DescriptionShow___3-QsNMNj tracker_markup']").unbind("click");
-    $('.new').find("div[class='edit___2HbkmNDA']").unbind("click");
-}
-
-function bindNewTextarea() {
-    if ($('.new')) {
-        $('.new').find("div[class='DescriptionShow___3-QsNMNj DescriptionShow__placeholder___1NuiicbF']").bind("click", applyTemplate);
-    }
-}
-
 function getBug() {
     return $('div[data-type="done"],div[data-type="current"],div[data-type="backlog"],div[data-type="icebox"]').find('.bug').children('.preview').children('.selected').parent();
-}
-
-function getAnalyseTemplate() {
-    if(!analyseTemplate) {
-        var response;
-        var xhr = new XMLHttpRequest();
-
-        xhr.open("GET", "https://www.pivotaltracker.com/services/v5/projects/605365/epics/3355739", false);
-        xhr.send();
-
-        response = JSON.parse(xhr.responseText);
-
-        analyseTemplate = response.description;
-    }
-
-    return analyseTemplate;
-}
-
-function getFeatureTemplate() {
-    if(!featureTemplate) {
-        var response;
-        var xhr = new XMLHttpRequest();
-
-        xhr.open("GET", "https://www.pivotaltracker.com/services/v5/projects/605365/epics/388831", false);
-        xhr.send();
-
-        response = JSON.parse(xhr.responseText);
-
-        featureTemplate = response.description;
-    }
-
-    return featureTemplate;
-}
-
-function getChoreTemplate() {
-    if(!choreTemplate) {
-        var response;
-        var xhr = new XMLHttpRequest();
-
-        xhr.open("GET", "https://www.pivotaltracker.com/services/v5/projects/605365/epics/388835", false);
-        xhr.send();
-
-        response = JSON.parse(xhr.responseText);
-
-        choreTemplate = response.description;
-    }
-
-    return choreTemplate;
-}
-
-function getBugTemplate() {
-    if(!bugTemplate) {
-        var response;
-        var xhr = new XMLHttpRequest();
-
-        xhr.open("GET", "https://www.pivotaltracker.com/services/v5/projects/605365/epics/388833", false);
-        xhr.send();
-
-        response = JSON.parse(xhr.responseText);
-
-        bugTemplate = response.description;
-    }
-
-    return bugTemplate;
 }
 
 function getChore() {
@@ -312,7 +222,7 @@ function getEpicInfo(epicLabel) {
     return response;
 }
 
-function applyStoriesValidation(stories,releaseName) {
+function applyStoriesValidation(stories,releaseName) {
     /* Validate that all stories have a release tag */
     for (var i = 0; i < stories.length; i++) {
         var hasGoodLabel = false;
@@ -328,6 +238,19 @@ function applyStoriesValidation(stories,releaseName) {
             $('div[data-id="' + stories[i].id +'"]').removeClass('invalidStory');
         }
     }
+}
+
+function addGanttNoteTicketInfo(parameter) {
+    var releaseGantt = "";
+    var hoursPerPoint = 12;
+    var devHoursString = '';
+    if (parameter.addLabel) {
+        parameter.addLabel = false;
+    }
+
+    devHoursString = parameter.ticket.points == -1 ? "" : " [" + parameter.ticket.points * hoursPerPoint + "]";
+    releaseGantt += parameter.ticket.name + " [#" + parameter.ticket.id + "]" + devHoursString + "\n";
+    return releaseGantt;
 }
 
 function addReleaseNoteTicketInfo(parameter) {
@@ -403,6 +326,7 @@ function update_output() {
     $('.selectedStoriesControls__actions').css({"padding-left":"158px"});
     $('.selectedStoriesControls__counterLabel').append("<span id='story_Selected_sum' style='margin-left: 7px;'><span style='font-weight:bold;'>Story :</span> " + sumStory + "/" + countStory + " | <span style='font-weight:bold;'>Chore :</span> " + sumChore + "/" + countChore + " | <span style='font-weight:bold;'>Bug :</span> " + sumBug + "/" + countBug + " | <span style='font-weight:bold;'>Total</span> : " + sumTotal +
                                                        "<div style='position: absolute;left: 46px;background-color: chocolate;width: 600px;height: 20px;padding-top: 2px;'>" +
+                                                       "<button class='selectedStoriesControls__button' style='font-weight:bold;' type='button' onClick='$.getGanttSheet()'>Gantt</button>" +
                                                        "<button class='selectedStoriesControls__button' style='font-weight:bold;' type='button' onClick='$.getReleaseNote()'>Release note</button>" +
                                                        "<button class='selectedStoriesControls__button' style='font-weight:bold;' type='button' onClick='$.getSprintSheet()'>Sprint sheet</button>" +
                                                        "<button class='selectedStoriesControls__button' style='font-weight:bold;' type='button' onClick='$.getPlanningPoker()'>PlanningPoker</button>" +
@@ -412,6 +336,62 @@ function update_output() {
                                                        "</div>" +
                                                        "</span>");
 }
+
+/**
+* Get the list of Ticket formatted to easiy paste into Asana. The list contains the number of hours estimated
+* in hours for easy conversion and visualization into instagantt in order to facilitate planning.
+* The number of hours is the number of points multiplied by the number of hours per point.
+*/
+$.getGanttSheet = function() {
+    var ganttNote = '';
+    var ticketList = [];
+
+    getFeature().children('.name').each(function(){
+        var ticket = {};
+        ticket.id = $(this).parent().parent().attr("data-id");
+        ticket.name = $(this).children('.story_name').children('.tracker_markup').text();
+        ticket.points = $(this).parent().children('.meta').text();
+        ticketList.push(ticket);
+    });
+
+    getChore().children('.name').each(function(){
+        var ticket = {};
+        ticket.id = $(this).parent().parent().attr("data-id");
+        ticket.name = $(this).children('.story_name').children('.tracker_markup').text();
+        ticket.points = $(this).parent().children('.meta').text();
+        ticketList.push(ticket);
+    });
+
+    getBug().children('.name').each(function(){
+        var ticket = {};
+        ticket.id = $(this).parent().parent().attr("data-id");
+        ticket.name = $(this).children('.story_name').children('.tracker_markup').text();
+        ticket.points = $(this).parent().children('.meta').text();
+        ticketList.push(ticket);
+    });
+
+    ticketList.sort(function (a, b) {
+        return a.name.localeCompare( b.name );
+    });
+
+    var i;
+    var parameter = {
+        addLabel: true,
+        episode: this,
+        ticket: ''
+    };
+
+    for (i = 0; i < ticketList.length; i++) {
+        parameter.ticket = ticketList[i];
+        ganttNote += addGanttNoteTicketInfo(parameter);
+    }
+
+    console.clear();
+    console.log(ganttNote);
+    executeCopy(ganttNote);
+};
+
+
 
 $.getReleaseNote = function() {
     var releaseDate = new Date().toISOString().slice(0, 10) + " @ 23h30";
@@ -424,7 +404,7 @@ $.getReleaseNote = function() {
         var story = {name:"", ep:"", prd:"", id:""};
         story.id = $(this).parent().parent().attr("data-id");
         story.prd = $(this).children('.labels').children('a:contains("prd")').first().text();
-        story.name = $(this).children('.story_name').text();
+        story.name = $(this).children('.story_name').children('.tracker_markup').text();
         if (story.prd === "") {
             story.prd ="prd - autre";
         } else if (story.prd.indexOf(",") > -1) {
@@ -449,7 +429,7 @@ $.getReleaseNote = function() {
     getChore().children('.name').each(function(){
         var chore = {name:"", prd:"", id:""};
         chore.id = $(this).parent().parent().attr("data-id");
-        chore.name = $(this).children('.story_name').text();
+        chore.name = $(this).children('.story_name').children('.tracker_markup').text();
         chore.prd = $(this).children('.labels').children('a:contains("prd")').first().text();
         if (chore.prd === "") {
             chore.prd ="prd - autre";
@@ -487,7 +467,7 @@ $.getReleaseNote = function() {
     $.each($.unique(produits.sort()), function() {
         releaseNote += "\n## " + this + "\n\n";
         var produit = this;
-        $.each($.unique(eps), function() {
+        $.each($.unique(eps.sort()), function() {
             var parameter = {
                 addLabel: true,
                 episode: this,
@@ -529,7 +509,7 @@ $.getSprintSheet = function() {
     getFeature().children('.name').each(function(){
         var story = {name:"", ep:"", id:""};
         story.id = $(this).parent().parent().attr("data-id");
-        story.name = $(this).children('.story_name').text();
+        story.name = $(this).children('.story_name').children('.tracker_markup').text();
         story.ep = $(this).children('.labels').children('a:contains("ep -")').first().text();
         if (story.ep === "") {
             story.ep ="ep - autre";
@@ -547,7 +527,7 @@ $.getSprintSheet = function() {
     getChore().children('.name').each(function(){
         var chore = {name:"", ep:"", id:""};
         chore.id = $(this).parent().parent().attr("data-id");
-        chore.name = $(this).children('.story_name').text();
+        chore.name = $(this).children('.story_name').children('.tracker_markup').text();
         chore.ep = $(this).children('.labels').children('a:contains("ep -")').first().text();
         if (chore.ep === "") {
             chore.ep ="ep - autre";
@@ -565,7 +545,7 @@ $.getSprintSheet = function() {
     getBug().children('.name').each(function(){
         var bug = {name:"", id:""};
         bug.id = $(this).parent().parent().attr("data-id");
-        bug.name = $(this).children('.story_name').text();
+        bug.name = $(this).children('.story_name').children('.tracker_markup').text();
         bugs.push(bug);
     });
 
@@ -661,7 +641,7 @@ $.getPlanningPoker = function() {
     getFeature().children('.name').each(function(){
         var story = {name:"", ep:"", id:""};
         story.id = $(this).parent().parent().attr("data-id");
-        story.name = $(this).children('.story_name').text();
+        story.name = $(this).children('.story_name').children('.tracker_markup').text();
         planningPokerList += "<a target='_blank' href='https://www.pivotaltracker.com/story/show/" + story.id + "'>" + story.name + "</a>\n";
     });
 
@@ -669,7 +649,7 @@ $.getPlanningPoker = function() {
     getChore().children('.name').each(function(){
         var chore = {name:"", ep:"", id:""};
         chore.id = $(this).parent().parent().attr("data-id");
-        chore.name = $(this).children('.story_name').text();
+        chore.name = $(this).children('.story_name').children('.tracker_markup').text();
         planningPokerList += "<a target='_blank' href='https://www.pivotaltracker.com/story/show/" + chore.id + "'>" + chore.name + "</a>\n";
     });
 
@@ -694,7 +674,7 @@ $.getDiff = function() {
         getFeature().children('.name').each(function(){
             var story = {name:"", id:"", usp:""};
             story.id = "https://www.pivotaltracker.com/story/show/" +$(this).parent().parent().attr("data-id");
-            story.name = $(this).children('.story_name').text();
+            story.name = $(this).children('.story_name').children('.tracker_markup').text();
             story.usp = $(this).parent().children('.meta').text();
             stories.push(story);
             urls.push(story.id);
@@ -704,7 +684,7 @@ $.getDiff = function() {
         getChore().children('.name').each(function(){
             var chore = {name:"", id:"", usp:""};
             chore.id = "https://www.pivotaltracker.com/story/show/" + $(this).parent().parent().attr("data-id");
-            chore.name = $(this).children('.story_name').text();
+            chore.name = $(this).children('.story_name').children('.tracker_markup').text();
             chore.usp = $(this).parent().children('.meta').text();
             chores.push(chore);
             urls.push(chore.id);
@@ -714,7 +694,7 @@ $.getDiff = function() {
         getBug().children('.name').each(function(){
             var bug = {name:"", id:"", usp:""};
             bug.id = "https://www.pivotaltracker.com/story/show/" + $(this).parent().parent().attr("data-id");
-            bug.name = $(this).children('.story_name').text();
+            bug.name = $(this).children('.story_name').children('.tracker_markup').text();
             bug.usp = $(this).parent().children('.meta').text();
             bugs.push(bug);
             urls.push(bug.id);
@@ -733,7 +713,7 @@ $.getDiff = function() {
                 var info = getInfoFromUrl(this.toString());
                 if (info) {
                     totalMin += parseInt($(info).children().children('.meta').text());
-                    diffSheet += "* [" + $(info).children().children().children('.story_name').text() + "](" + this.toString() + ") - " + $(info).children().children('.meta').text() + "pts\n";
+                    diffSheet += "* [" + $(info).children().children().children('.story_name').children('.tracker_markup').text() + "](" + this.toString() + ") - " + $(info).children().children('.meta').text() + "pts\n";
                 } else {
                     diffSheet += "* [Deleted Story](" + this.toString() + ") - ? pts\n";
                 }
@@ -798,7 +778,7 @@ $.getBroadcastNote = function() {
         if (story.broadcast.indexOf(",") > -1){
             story.broadcast = story.broadcast.substring(0,story.broadcast.indexOf(","));
         }
-        story.name = $(this).children('.story_name').text();
+        story.name = $(this).children('.story_name').children('.tracker_markup').text();
         story.ep = $(this).children('.labels').children('a:contains("ep -")').first().text();
         if (story.ep === "") {
             story.ep ="ep - autre";
@@ -834,7 +814,7 @@ $.getBroadcastNote = function() {
         if (chore.broadcast.indexOf(",") > -1){
             chore.broadcast = chore.broadcast.substring(0,chore.broadcast.indexOf(","));
         }
-        chore.name = $(this).children('.story_name').text();
+        chore.name = $(this).children('.story_name').children('.tracker_markup').text();
         chore.ep = $(this).children('.labels').children('a:contains("ep -")').first().text();
         if (chore.ep === "") {
             chore.ep ="ep - autre";
@@ -869,7 +849,7 @@ $.getBroadcastNote = function() {
         if (bug.broadcast.indexOf(",") > -1){
             bug.broadcast = bug.broadcast.substring(0,bug.broadcast.indexOf(","));
         }
-        bug.name = $(this).children('.story_name').text();
+        bug.name = $(this).children('.story_name').children('.tracker_markup').text();
         bug.ep = $(this).children('.labels').children('a:contains("ep -")').first().text();
         if (bug.ep === "") {
             bug.ep ="ep - autre";
@@ -964,3 +944,4 @@ $.getIdList = function(){
     console.log(idString);
     executeCopy(idString);
 }
+
