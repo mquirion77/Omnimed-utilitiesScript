@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name       GitHub HD Resolution
 // @namespace
-// @version    2019.09-1
+// @version    2018.10-2
 // @description  Welcome to the year 2000s, HD Resolution is here !
 // @match      https://github.com/*
 // @copyright  2018+, Omnimed.com
@@ -28,18 +28,19 @@ function bindResize() {
 }
 
 function resize() {
-    try {
-        $('.container.new-discussion-timeline.experiment-repo-nav').width('98%');
-        $('.discussion-timeline.pull-discussion-timeline.js-pull-discussion-timeline.js-quote-selection-container.js-review-state-classes').width('80%');
-        $('.container').css('width', '98%');
-        $('.container-lg, .comment-holder').css({
-            'width': '98%',
-            'max-width': '100%'
-        });
-    } catch (e) {
-    }
+    setTimeout(function() {
+        try {
+            $('.container.new-discussion-timeline.experiment-repo-nav').width('98%');
+            $('.discussion-timeline.pull-discussion-timeline.js-pull-discussion-timeline.js-quote-selection-container.js-review-state-classes').width('80%');
+            $('.container').css('width', '98%');
+            $('.container-lg, .comment-holder').css({
+                'width': '98%',
+                'max-width': '100%'
+            });
+        } catch (e) { }
+    }, 300);
 
     setTimeout(function() {
         bindResize();
-    }, 500);
+    }, 300);
 };
