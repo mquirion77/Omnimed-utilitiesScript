@@ -33,6 +33,7 @@ function resize() {
             $('.container.new-discussion-timeline.experiment-repo-nav').width('98%');
             $('.discussion-timeline.pull-discussion-timeline.js-pull-discussion-timeline.js-quote-selection-container.js-review-state-classes').width('80%');
             $('.container').css('width', '98%');
+            $('.tree-browser-result .css-truncate-target').css('max-width', '100%');
             $('.container-lg, .comment-holder').css({
                 'width': '98%',
                 'max-width': '100%'
