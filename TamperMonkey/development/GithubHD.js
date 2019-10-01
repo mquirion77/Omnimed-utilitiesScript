@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name       GitHub HD Resolution
 // @namespace
-// @version    2018.10-2
+// @version    2018.10-3
 // @description  Welcome to the year 2000s, HD Resolution is here !
 // @match      https://github.com/*
-// @copyright  2018+, Omnimed.com
+// @copyright  2019+, Omnimed.com
 // @require        https://code.jquery.com/jquery-3.3.1.min.js
 // ==/UserScript==
 
