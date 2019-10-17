@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Cucumber pimper
 // @namespace    http://tampermonkey.net/
-// @version      3.2
+// @version      3.3
 // @description  Pimp cucumber reports
 // @author       mquiron, mcormier, nguillet, shenault, marobert
 // @match        https://jenkins.omnimed.com/*job/*/cucumber-html-reports/*overview-tags.html
@@ -26,7 +26,7 @@ function colorCucumberTagForQA(tag, qa) {
 
 function colorCucumberTags() {
 	var qa = '';
-	
+
 	//Val
 	qa = 'Val';
 	//----global---- //doit etre avant tous les tags specifiques des autres QA
@@ -83,7 +83,7 @@ function colorCucumberTags() {
 	colorCucumberTagForQA('Umf', qa);
 	//----Tache----
 	//----SessionOnimed----
-	colorCucumberTagForQA('@Cas', qa);
+	colorCucumberTagForQA('@Authentification', qa);
 	colorCucumberTagForQA('@ExpirationSession', qa);
 	//----SessionOnimed----
 
