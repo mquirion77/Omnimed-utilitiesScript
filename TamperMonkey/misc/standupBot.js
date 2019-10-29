@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Join Meet
 // @namespace    http://tampermonkey.net/
-// @version      0.3
+// @version      0.4
 // @description  try to take over the world!
 // @author       You
 // @match        https://meet.google.com/*
@@ -22,8 +22,8 @@ if (timeout < 0) {
 $(document).ready(function() {
     console.log(timeout);
     setTimeout(function() {
-        if ($('input').length == 0 && $(".e3Duub[role='button']").length > 0) {
-            $(".e3Duub[role='button']").click();
+        if ($('input').length == 0 && $(".Y5sE8d[role='button']").length > 0) {
+            $(".Y5sE8d[role='button']").click();
         } else if ($(".sYZaLe[role='button']").length > 0) {
             $(".sYZaLe[role='button']").click();
         }
