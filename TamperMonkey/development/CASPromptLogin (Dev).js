@@ -3,7 +3,8 @@
 // @namespace  http://use.i.E.your.homepage/
 // @version    0.1
 // @description  enter something useful
-// @match      http://localhost:8080/cas/login*
+// @match      https://localhost/cas/login*
+// @match      https://cloud.dev.omnimed.com/cas/login*
 // @copyright  2012+, You
 // @require        https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js
 // ==/UserScript==
