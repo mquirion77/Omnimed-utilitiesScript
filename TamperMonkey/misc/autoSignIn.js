@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SignIn
 // @namespace    http://tampermonkey.net/
-// @version      0.1
+// @version      0.2
 // @description  try to take over the world!
 // @author       You
 // @match        https://accounts.google.com/*
@@ -16,13 +16,13 @@ $(document).ready(function() {
     setTimeout(function() {
         if ($("input[type='email']").length > 0) {
             $("input[type='email']").val(email);
-            $(".e3Duub[role='button']").click();
+            $("#identifierNext").click();
         } else {
             $("[data-email='" + email + "']").click();
         }
         setTimeout(function() {
             $("input[type='password']").val(password);
-            $(".e3Duub[role='button']").click();
+            $("#passwordNext").click();
         }, 10000);
     }, 10000);
 });
