@@ -4,7 +4,8 @@
 // @version      0.1
 // @description  Auto login for Kuberenetes Dashboard
 // @author       You
-// @match        https://k8.omnimed.com/dashboard/*
+// @maintainer   Philippe Guay
+// @match        https://k8.omnimed.com/*
 // @grant        none
 // @require      https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.min.js
