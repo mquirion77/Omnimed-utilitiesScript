@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         K8 Dashboard Login
 // @namespace    http://tampermonkey.net/
-// @version      0.1
+// @version      0.2
 // @description  Auto login for Kuberenetes Dashboard
 // @author       You
 // @maintainer   Philippe Guay
