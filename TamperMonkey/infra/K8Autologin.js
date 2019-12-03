@@ -34,7 +34,7 @@ window.copyToClipboard = function(str) {
                 
                 document.getElementsByClassName('kd-login-mode-description')[1].innerHTML =
                     '<div style="overflow-wrap: break-word;word-wrap: break-word;">' + token + '</div><br /><input type="button" onclick="copyToClipboard(\''+token+ '\');" value="COPY" />';
-            }, 1000);
+            }, 150);
         }
     });
 })();
