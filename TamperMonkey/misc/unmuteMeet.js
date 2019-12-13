@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Unmute me
 // @namespace    http://omnimed.com
-// @version      0.1
+// @version      0.2
 // @description  unmute the mic in the meet
 // @author       ggirard
 // @match        https://meet.google.com/*
@@ -10,8 +10,8 @@
 (function() {
     'use strict';
     setInterval(function(){
-        if (document.querySelector("div[jsname='LgbsSe']").parentElement.classList.contains("FTMc0c")) {
-            document.querySelector("div[jsname='LgbsSe']").click();
+        if (document.querySelector("div[jsname='BOHaEe']").classList.contains("FTMc0c")) {
+            document.querySelector("div[jsname='BOHaEe']").click();
         }
     }, 1000);
 })();
