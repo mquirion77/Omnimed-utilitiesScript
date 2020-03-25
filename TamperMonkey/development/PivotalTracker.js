@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Pivotal Tracker Enhanced
 // @namespace    https://www.pivotaltracker.com/
-// @version      0.52
+// @version      0.53
 // @description  Pivotal Tracker enhanced for Omnimed
 // @author       Omnimed
 // @match        https://www.pivotaltracker.com/*
@@ -27,26 +27,26 @@ function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-$( document ).ready(function() {
-    $("<style type='text/css'> .devopsIcon:before{ background-image:url(https://raw.githubusercontent.com/Omnimed/Omnimed-utilitiesScript/master/TamperMonkey/image/devops.png) !important;} </style>").appendTo("head");
-    $("<style type='text/css'> .analyseIcon:before{ background-image:url(https://raw.githubusercontent.com/Omnimed/Omnimed-utilitiesScript/master/TamperMonkey/image/analyse.png) !important;} </style>").appendTo("head");
-    $("<style type='text/css'> .shadowIcon:before{ background-image:url(https://raw.githubusercontent.com/Omnimed/Omnimed-utilitiesScript/master/TamperMonkey/image/shadow.png) !important;} </style>").appendTo("head");
-    $("<style type='text/css'> .onAirIcon:before{ background-image:url(https://raw.githubusercontent.com/Omnimed/Omnimed-utilitiesScript/master/TamperMonkey/image/onair.png) !important;} </style>").appendTo("head");
-    $("<style type='text/css'> .invalidStory .preview { background-color: #fb9595 !important;} </style>").appendTo("head");
-    $("head").append("<style type='text/css'>\n" +
-    ".labelNeed { background-color: #4d5258 !important; color: white !important; border-radius: 5px ; padding: 0px 5px 0px 5px; margin-right: 2px; }\n" +
-    ".labelMustHave { background-color: #cc0000 !important; color: white !important; border-radius: 5px ; padding: 0px 5px 0px 5px; margin-right: 2px; }\n" +
-    ".labelShouldHave { background-color: #f0ab00 !important; color: white !important; border-radius: 5px ; padding: 0px 5px 0px 5px; margin-right: 2px;}\n" +
-    ".labelCouldHave { background-color: #0088ce !important; color: white !important; border-radius: 5px ; padding: 0px 5px 0px 5px; margin-right: 2px; }\n" +
-    ".labelFeatureBranch { background-color: #000000!important; color: white !important; border-radius: 10px ; padding: 0px 5px 0px 5px; margin-right: 2px; }\n" +
-    "</style>");
+$(function() {
+    $("head").append("<style id='omnimedStyles' type='text/css'>\n"
+        + ".devopsIcon:before{ background-image:url(https://raw.githubusercontent.com/Omnimed/Omnimed-utilitiesScript/master/TamperMonkey/image/devops.png) !important;}"
+        + ".analyseIcon:before{ background-image:url(https://raw.githubusercontent.com/Omnimed/Omnimed-utilitiesScript/master/TamperMonkey/image/analyse.png) !important;}"
+        + ".shadowIcon:before{ background-image:url(https://raw.githubusercontent.com/Omnimed/Omnimed-utilitiesScript/master/TamperMonkey/image/shadow.png) !important;}"
+        + ".onAirIcon:before{ background-image:url(https://raw.githubusercontent.com/Omnimed/Omnimed-utilitiesScript/master/TamperMonkey/image/onair.png) !important;}"
+        + ".invalidStory .preview { background-color: #fb9595 !important;}"
+        + ".labelNeed { background-color: #4d5258 !important; color: white !important; border-radius: 5px ; padding: 0px 5px 0px 5px; margin-right: 2px; }" 
+        + ".labelMustHave { background-color: #cc0000 !important; color: white !important; border-radius: 5px ; padding: 0px 5px 0px 5px; margin-right: 2px; }" 
+        + ".labelShouldHave { background-color: #f0ab00 !important; color: white !important; border-radius: 5px ; padding: 0px 5px 0px 5px; margin-right: 2px;}" 
+        + ".labelCouldHave { background-color: #0088ce !important; color: white !important; border-radius: 5px ; padding: 0px 5px 0px 5px; margin-right: 2px; }" 
+        + ".labelFeatureBranch { background-color: #000000!important; color: white !important; border-radius: 10px ; padding: 0px 5px 0px 5px; margin-right: 2px; }" 
+        + "\n</style>");
 });
 
 function updateIcons() {
-    $('.feature').find('.labels.post').find("a:contains('onair')").parent().parent().parent().children('.meta').addClass('onAirIcon');
-    $('.feature').find('.labels.post').find("a:contains('devops')").parent().parent().parent().children('.meta').addClass('devopsIcon');
-    $('.feature').find('.labels.post').find("a:contains('analyse')").parent().parent().parent().children('.meta').addClass('analyseIcon');
-    $('.bug,.chore,.feature').find('.labels.post').find("a:contains('shadow')").parent().parent().parent().children('.meta').addClass('shadowIcon');
+    $('.feature .labels:has(a:contains("onair"))').parentsUntil('.story').find('span.meta').addClass('onAirIcon')
+    $('.feature .labels:has(a:contains("devops"))').parentsUntil('.story').find('span.meta').addClass('devopsIcon');
+    $('.feature .labels:has(a:contains("analyse"))').parentsUntil('.story').find('span.meta').addClass('analyseIcon');
+    $('.feature .labels:has(a:contains("shadow"))').parentsUntil('.story').find('span.meta').addClass('shadowIcon');
 }
 
 function updateFlyoverIcons() {
@@ -325,7 +325,10 @@ function addReleaseNoteTicketInfo(parameter) {
             releaseNote += "\n### " + parameter.episode.toString() + "\n\n";
         }
     }
-    releaseNote += " * " + parameter.ticket.name + " [https://www.pivotaltracker.com/story/show/" + parameter.ticket.id + "]\n";
+    releaseNote += " * ";
+    releaseNote += parameter.ticket.name ;
+    releaseNote += " [https://www.pivotaltracker.com/story/show/" + parameter.ticket.id + "]\n";
+
     return releaseNote;
 }
 
@@ -381,8 +384,6 @@ function update_output() {
                                                        "<div style='position: absolute;left: 46px;background-color: chocolate;width: 600px;height: 20px;padding-top: 2px;'>" +
                                                        "<button class='selectedStoriesControls__button' style='font-weight:bold;' type='button' onClick='$.getReleaseNote()'>Release note</button>" +
                                                        "<button class='selectedStoriesControls__button' style='font-weight:bold;' type='button' onClick='$.getSprintSheet()'>Sprint sheet</button>" +
-                                                       "<button class='selectedStoriesControls__button' style='font-weight:bold;' type='button' onClick='$.getPlanningPoker()'>PlanningPoker</button>" +
-                                                       "<button class='selectedStoriesControls__button' style='font-weight:bold;' type='button' onClick='$.getDiff()'>Diff</button>" +
                                                        "<button class='selectedStoriesControls__button' style='font-weight:bold;' type='button' onClick='$.getBroadcastNote()'>Episode note</button>" +
                                                        "<button class='selectedStoriesControls__button' style='font-weight:bold;' type='button' onClick='$.getIdList()'>Id list</button>" +
                                                        "</div>" +
@@ -397,19 +398,19 @@ $.getReleaseNote = function() {
     var produits = [];
     var stories = [];
     getFeature().children('.name').each(function(){
-        var story = {name:"", ep:"", prd:"", id:""};
+        var story = {name:"", ep:"", prd:"", id:"", type: "feature"};
         story.id = $(this).parent().parent().attr("data-id");
-        story.prd = $(this).children('.labels').children('a:contains("prd")').first().text();
-        story.name = $(this).children('.story_name').children('.tracker_markup').text();
+        story.prd = $(this).find('.labels a:contains("prd")').text();
+        story.name = $(this).find('.story_name .tracker_markup').text();
         if (story.prd === "") {
-            story.prd ="prd - autre";
+            story.prd = "prd - autre";
         } else if (story.prd.indexOf(",") > -1) {
             story.prd = story.prd.substring(0,story.prd.indexOf(","));
         }
         story.prd = capitalizeFirstLetter(story.prd.substring(6));
-        story.ep = $(this).children('.labels').children('a:contains("ep -")').first().text();
+        story.ep = $(this).find('.labels a:contains("ep -")').text();
         if (story.ep === "") {
-            story.ep ="ep - autre";
+            story.ep = "ep - autre";
         } else if (story.ep.indexOf(",") > -1) {
             story.ep = story.ep.substring(0,story.ep.indexOf(","));
         }
@@ -423,19 +424,19 @@ $.getReleaseNote = function() {
 
     var chores = [];
     getChore().children('.name').each(function(){
-        var chore = {name:"", prd:"", id:""};
+        var chore = {name:"", prd:"", id:"", type: "chore"};
         chore.id = $(this).parent().parent().attr("data-id");
-        chore.name = $(this).children('.story_name').children('.tracker_markup').text();
-        chore.prd = $(this).children('.labels').children('a:contains("prd")').first().text();
+        chore.name = $(this).find('.story_name .tracker_markup').text();
+        chore.prd = $(this).find('.labels a:contains("prd")').text();
         if (chore.prd === "") {
-            chore.prd ="prd - autre";
+            chore.prd = "prd - autre";
         } else if (chore.prd.indexOf(",") > -1) {
             chore.prd = chore.prd.substring(0,chore.prd.indexOf(","));
         }
         chore.prd = capitalizeFirstLetter(chore.prd.substring(6));
-        chore.ep = $(this).children('.labels').children('a:contains("ep -")').first().text();
+        chore.ep = $(this).find('.labels a:contains("ep -")').text();
         if (chore.ep === "") {
-            chore.ep ="ep - autre";
+            chore.ep = "ep - autre";
         } else if (chore.ep.indexOf(",") > -1) {
             chore.ep = chore.ep.substring(0,chore.ep.indexOf(","));
         }
@@ -449,10 +450,10 @@ $.getReleaseNote = function() {
 
     var bugs = [];
     getBug().children('.name').each(function(){
-        var bug = {name:"", id:""};
+        var bug = {name:"", id:"", type: "bug"};
         bug.id = $(this).parent().parent().attr("data-id");
-        bug.name = $(this).children('.story_name').text();
-        $(this).children('.labels.pre').children('a:contains("bugprod")').each(function() {
+        bug.name = $(this).find('.story_name .tracker_markup').text();
+        $(this).find('.labels a:contains("bugprod")').each(function() {
             bugs.push(bug);
         });
     });
@@ -505,10 +506,10 @@ $.getSprintSheet = function() {
     getFeature().children('.name').each(function(){
         var story = {name:"", ep:"", id:""};
         story.id = $(this).parent().parent().attr("data-id");
-        story.name = $(this).children('.story_name').children('.tracker_markup').text();
-        story.ep = $(this).children('.labels').children('a:contains("ep -")').first().text();
+        story.name = $(this).find('.story_name .tracker_markup').text();
+        story.ep = $(this).find('.labels a:contains("ep -")').text();
         if (story.ep === "") {
-            story.ep ="ep - autre";
+            story.ep = "ep - autre";
         } else if (story.ep.indexOf(",") > -1) {
             story.ep = story.ep.substring(0,story.ep.indexOf(","));
         }
@@ -523,10 +524,10 @@ $.getSprintSheet = function() {
     getChore().children('.name').each(function(){
         var chore = {name:"", ep:"", id:""};
         chore.id = $(this).parent().parent().attr("data-id");
-        chore.name = $(this).children('.story_name').children('.tracker_markup').text();
-        chore.ep = $(this).children('.labels').children('a:contains("ep -")').first().text();
+        chore.name = $(this).find('.story_name .tracker_markup').text();
+        chore.ep = $(this).find('.labels a:contains("ep -")').text();
         if (chore.ep === "") {
-            chore.ep ="ep - autre";
+            chore.ep = "ep - autre";
         } else if (chore.ep.indexOf(",") > -1) {
             chore.ep = chore.ep.substring(0,chore.ep.indexOf(","));
         }
@@ -541,7 +542,7 @@ $.getSprintSheet = function() {
     getBug().children('.name').each(function(){
         var bug = {name:"", id:""};
         bug.id = $(this).parent().parent().attr("data-id");
-        bug.name = $(this).children('.story_name').children('.tracker_markup').text();
+        bug.name = $(this).find('.story_name .tracker_markup').text();
         bugs.push(bug);
     });
 
@@ -632,134 +633,6 @@ $.getSprintSheet = function() {
     executeCopy(sprintSheet);
 };
 
-$.getPlanningPoker = function() {
-    var planningPokerList = "";
-    getFeature().children('.name').each(function(){
-        var story = {name:"", ep:"", id:""};
-        story.id = $(this).parent().parent().attr("data-id");
-        story.name = $(this).children('.story_name').children('.tracker_markup').text();
-        planningPokerList += "<a target='_blank' href='https://www.pivotaltracker.com/story/show/" + story.id + "'>" + story.name + "</a>\n";
-    });
-
-    var chores = [];
-    getChore().children('.name').each(function(){
-        var chore = {name:"", ep:"", id:""};
-        chore.id = $(this).parent().parent().attr("data-id");
-        chore.name = $(this).children('.story_name').children('.tracker_markup').text();
-        planningPokerList += "<a target='_blank' href='https://www.pivotaltracker.com/story/show/" + chore.id + "'>" + chore.name + "</a>\n";
-    });
-
-    console.clear();
-    console.log(planningPokerList);
-    executeCopy(planningPokerList);
-};
-
-$.getDiff = function() {
-    var tickets = prompt("Please enter your last stories and chores from the old sprintPlanning sheet", "");
-    var re = /https[^\]]*/g;
-
-    if (tickets !== null) {
-        var lastUrls = tickets.match(re);
-        var sprintSheet = "";
-        var urls = [];
-        var diffSheet = "";
-        var totalMin = 0;
-        var totalPlus = 0;
-
-        var stories = [];
-        getFeature().children('.name').each(function(){
-            var story = {name:"", id:"", usp:""};
-            story.id = "https://www.pivotaltracker.com/story/show/" +$(this).parent().parent().attr("data-id");
-            story.name = $(this).children('.story_name').children('.tracker_markup').text();
-            story.usp = $(this).parent().children('.meta').text();
-            stories.push(story);
-            urls.push(story.id);
-        });
-
-        var chores = [];
-        getChore().children('.name').each(function(){
-            var chore = {name:"", id:"", usp:""};
-            chore.id = "https://www.pivotaltracker.com/story/show/" + $(this).parent().parent().attr("data-id");
-            chore.name = $(this).children('.story_name').children('.tracker_markup').text();
-            chore.usp = $(this).parent().children('.meta').text();
-            chores.push(chore);
-            urls.push(chore.id);
-        });
-
-        var bugs = [];
-        getBug().children('.name').each(function(){
-            var bug = {name:"", id:"", usp:""};
-            bug.id = "https://www.pivotaltracker.com/story/show/" + $(this).parent().parent().attr("data-id");
-            bug.name = $(this).children('.story_name').children('.tracker_markup').text();
-            bug.usp = $(this).parent().children('.meta').text();
-            bugs.push(bug);
-            urls.push(bug.id);
-        });
-
-        diffSheet += "## Scope creep Minus \n";
-        $.each(lastUrls, function() {
-            var found = false;
-            var i = 0;
-            for (i = 0; i < urls.length; i++) {
-                if (urls[i] === this.toString()) {
-                    found = true;
-                }
-            }
-            if (!found) {
-                var info = getInfoFromUrl(this.toString());
-                if (info) {
-                    totalMin += parseInt($(info).children().children('.meta').text());
-                    diffSheet += "* [" + $(info).children().children().children('.story_name').children('.tracker_markup').text() + "](" + this.toString() + ") - " + $(info).children().children('.meta').text() + "pts\n";
-                } else {
-                    diffSheet += "* [Deleted Story](" + this.toString() + ") - ? pts\n";
-                }
-            }
-        });
-        diffSheet += "\n## Scope creep Plus \n";
-        $.each(urls, function() {
-            var found = false;
-            var i = 0;
-            for (i = 0; i < lastUrls.length; i++) {
-                if (lastUrls[i] === this.toString()) {
-                    found = true;
-                }
-            }
-            if (!found) {
-                i = 0;
-                for (i = 0; i < stories.length; i++) {
-                    if (stories[i].id === this.toString()) {
-                        totalPlus += parseInt(stories[i].usp);
-                        diffSheet += "* [" + stories[i].name + "](" + stories[i].id + ") - " + stories[i].usp + "pts\n";
-                    }
-                }
-                i = 0;
-                for (i = 0; i < chores.length; i++) {
-                    if (chores[i].id === this.toString()) {
-                        totalPlus += parseInt(chores[i].usp);
-                        diffSheet += "* [" + chores[i].name + "](" + chores[i].id + ") - " + chores[i].usp + "pts\n";
-                    }
-                }
-                i = 0;
-                for (i = 0; i < bugs.length; i++) {
-                    if (bugs[i].id === this.toString()) {
-                        totalPlus += parseInt(bugs[i].usp);
-                        diffSheet += "* [" + bugs[i].name + "](" + bugs[i].id + ") - " + bugs[i].usp + "pts\n";
-                    }
-                }
-            }
-        });
-
-
-        console.clear();
-        var diff = totalPlus - totalMin;
-        console.log(diff);
-
-        diffSheet += "\n\n Différence de " + diff + " points de la planification initiale";
-        console.log(diffSheet);
-        executeCopy(diffSheet);
-    }
-};
-
 $.getBroadcastNote = function() {
     var broadcastNote = "Date de déploiement visée : \nVersion de chrome supportée : \n\n";
     var broadcasts = [];
@@ -770,19 +643,19 @@ $.getBroadcastNote = function() {
     getFeature().children('.name').each(function(){
         var story = {name:"", broadcast:"", ep:"", id:"", version:""};
         story.id = $(this).parent().parent().attr("data-id");
-        story.broadcast = capitalizeFirstLetter($(this).children('.labels').children('a:contains("broadcast")').first().text());
+        story.broadcast = capitalizeFirstLetter($(this).find('.labels a:contains("broadcast")').text());
         if (story.broadcast.indexOf(",") > -1){
             story.broadcast = story.broadcast.substring(0,story.broadcast.indexOf(","));
         }
-        story.name = $(this).children('.story_name').children('.tracker_markup').text();
-        story.ep = $(this).children('.labels').children('a:contains("ep -")').first().text();
+        story.name = $(this).find('.story_name .tracker_markup').text();
+        story.ep = $(this).find('.labels a:contains("ep -")').text();
         if (story.ep === "") {
-            story.ep ="ep - autre";
+            story.ep = "ep - autre";
         } else if (story.ep.indexOf(",") > -1) {
             story.ep = story.ep.substring(0,story.ep.indexOf(","));
         }
 
-        story.version = capitalizeFirstLetter($(this).children('.labels').children('a:contains("v -")').first().text());
+        story.version = capitalizeFirstLetter($(this).find('.labels a:contains("v -")').text());
          if (story.version.indexOf(",") > -1){
             story.version = story.version.substring(0,story.version.indexOf(","));
         }
@@ -806,19 +679,19 @@ $.getBroadcastNote = function() {
     getChore().children('.name').each(function(){
         var chore = {name:"", broadcast:"", ep:"", id:"", version: ""};
         chore.id = $(this).parent().parent().attr("data-id");
-        chore.broadcast = capitalizeFirstLetter($(this).children('.labels').children('a:contains("broadcast")').first().text());
+        chore.broadcast = capitalizeFirstLetter($(this).find('.labels a:contains("broadcast")').text());
         if (chore.broadcast.indexOf(",") > -1){
             chore.broadcast = chore.broadcast.substring(0,chore.broadcast.indexOf(","));
         }
-        chore.name = $(this).children('.story_name').children('.tracker_markup').text();
-        chore.ep = $(this).children('.labels').children('a:contains("ep -")').first().text();
+        chore.name = $(this).find('.story_name .tracker_markup').text();
+        chore.ep = $(this).find('.labels a:contains("ep -")').text();
         if (chore.ep === "") {
-            chore.ep ="ep - autre";
+            chore.ep = "ep - autre";
         } else if (chore.ep.indexOf(",") > -1) {
             chore.ep = chore.ep.substring(0,chore.ep.indexOf(","));
         }
 
-        chore.version = capitalizeFirstLetter($(this).children('.labels').children('a:contains("v -")').first().text());
+        chore.version = capitalizeFirstLetter($(this).find('.labels a:contains("v -")').text());
          if (chore.version.indexOf(",") > -1){
             chore.version = chore.version.substring(0,chore.version.indexOf(","));
         }
@@ -841,24 +714,24 @@ $.getBroadcastNote = function() {
     getBug().children('.name').each(function(){
         var bug = {name:"", broadcast:"", ep:"", id:"", version:""};
         bug.id = $(this).parent().parent().attr("data-id");
-        bug.broadcast = capitalizeFirstLetter($(this).children('.labels').children('a:contains("broadcast")').first().text());
+        bug.broadcast = capitalizeFirstLetter($(this).find('.labels a:contains("broadcast")').text());
         if (bug.broadcast.indexOf(",") > -1){
             bug.broadcast = bug.broadcast.substring(0,bug.broadcast.indexOf(","));
         }
-        bug.name = $(this).children('.story_name').children('.tracker_markup').text();
-        bug.ep = $(this).children('.labels').children('a:contains("ep -")').first().text();
+        bug.name = $(this).find('.story_name .tracker_markup').text();
+        bug.ep = $(this).find('.labels  a:contains("ep -")').text();
         if (bug.ep === "") {
-            bug.ep ="ep - autre";
+            bug.ep = "ep - autre";
         } else if (bug.ep.indexOf(",") > -1) {
             bug.ep = bug.ep.substring(0,bug.ep.indexOf(","));
         }
 
-        bug.version = capitalizeFirstLetter($(this).children('.labels').children('a:contains("v -")').first().text());
+        bug.version = capitalizeFirstLetter($(this).find('.labels a:contains("v -")').text());
          if (bug.version.indexOf(",") > -1){
             bug.version = bug.version.substring(0,bug.version.indexOf(","));
         }
 
-        $(this).children('.labels.pre').children('a:contains("bugprod")').each(function() {
+        $(this).children('.labels a:contains("bugprod")').each(function() {
             bugs.push(bug);
             if (bug.broadcast === "") {
                 togglz.push(bug);
@@ -926,7 +799,6 @@ $.getBroadcastNote = function() {
     console.log(broadcastNote);
     executeCopy(broadcastNote);
 };
-
 
 $.getIdList = function(){
     var idList = [];
