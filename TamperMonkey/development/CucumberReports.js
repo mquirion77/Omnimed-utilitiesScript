@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Cucumber pimper
 // @namespace    http://tampermonkey.net/
-// @version      3.5
+// @version      3.6
 // @description  Pimp cucumber reports
 // @author       mquiron, mcormier, nguillet, shenault, marobert
 // @match        https://jenkins.omnimed.com/*job/*/cucumber-html-reports/*overview-tags.html
@@ -37,8 +37,10 @@ function colorCucumberTags() {
 	colorCucumberTagForQA('Cnesst', qa);
 	colorCucumberTagForQA('Contexte', qa);
 	colorCucumberTagForQA('@DsqSh', qa);
+	colorCucumberTagForQA('FacturationPrivee', qa);
 	colorCucumberTagForQA('MaladieChronique', qa);
 	colorCucumberTagForQA('Note', qa);
+	colorCucumberTagForQA('@OCAngular', qa);
 	colorCucumberTagForQA('Outil', qa);
 	colorCucumberTagForQA('Probleme', qa);
 	colorCucumberTagForQA('Dictionnaire', qa);
@@ -55,11 +57,13 @@ function colorCucumberTags() {
 	colorCucumberTagForQA('@Aide', qa);
 	colorCucumberTagForQA('@AdministrationActivite', qa);
 	colorCucumberTagForQA('@AdministrationStatut', qa);
+	colorCucumberTagForQA('@AdministrationVisioconférence', qa);
 	colorCucumberTagForQA('@CentreAdmin', qa);
-	colorCucumberTagForQA('@Contact', qa);
+	colorCucumberTagForQA('Contact', qa);
+	colorCucumberTagForQA('@Notification', qa);
+	colorCucumberTagForQA('@RecherchePatient', qa);
 	colorCucumberTagForQA('@RendezVous', qa);
 	colorCucumberTagForQA('SalleAttente', qa);
-	colorCucumberTagForQA('@Videoconference', qa);
 
 	//Nic
 	qa = 'Nic';
@@ -99,6 +103,7 @@ function colorCucumberTags() {
 	//All
 	qa = 'All'
 	colorCucumberTagForQA('@CreationDonnee', qa);
+	colorCucumberTagForQA('@Exemple', qa);
 }
 
 colorCucumberTags();
