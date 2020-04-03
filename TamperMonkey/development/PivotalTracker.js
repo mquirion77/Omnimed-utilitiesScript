@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Pivotal Tracker Enhanced
 // @namespace    https://www.pivotaltracker.com/
-// @version      0.53
+// @version      0.54
 // @description  Pivotal Tracker enhanced for Omnimed
 // @author       Omnimed
 // @match        https://www.pivotaltracker.com/*
@@ -34,12 +34,12 @@ $(function() {
         + ".shadowIcon:before{ background-image:url(https://raw.githubusercontent.com/Omnimed/Omnimed-utilitiesScript/master/TamperMonkey/image/shadow.png) !important;}"
         + ".onAirIcon:before{ background-image:url(https://raw.githubusercontent.com/Omnimed/Omnimed-utilitiesScript/master/TamperMonkey/image/onair.png) !important;}"
         + ".invalidStory .preview { background-color: #fb9595 !important;}"
-        + ".labelNeed { background-color: #4d5258 !important; color: white !important; border-radius: 5px ; padding: 0px 5px 0px 5px; margin-right: 2px; }" 
-        + ".labelMustHave { background-color: #cc0000 !important; color: white !important; border-radius: 5px ; padding: 0px 5px 0px 5px; margin-right: 2px; }" 
-        + ".labelShouldHave { background-color: #f0ab00 !important; color: white !important; border-radius: 5px ; padding: 0px 5px 0px 5px; margin-right: 2px;}" 
-        + ".labelCouldHave { background-color: #0088ce !important; color: white !important; border-radius: 5px ; padding: 0px 5px 0px 5px; margin-right: 2px; }" 
-        + ".labelFeatureBranch { background-color: #000000!important; color: white !important; border-radius: 10px ; padding: 0px 5px 0px 5px; margin-right: 2px; }" 
-        + "\n</style>");
+        + ".labelNeed { background-color: #4d5258 !important; color: white !important; border-radius: 5px ; padding: 0px 5px 0px 5px; margin-right: 2px; }"
+        + ".labelMustHave { background-color: #cc0000 !important; color: white !important; border-radius: 5px ; padding: 0px 5px 0px 5px; margin-right: 2px; }"
+        + ".labelShouldHave { background-color: #f0ab00 !important; color: white !important; border-radius: 5px ; padding: 0px 5px 0px 5px; margin-right: 2px;}"
+        + ".labelCouldHave { background-color: #0088ce !important; color: white !important; border-radius: 5px ; padding: 0px 5px 0px 5px; margin-right: 2px; }"
+        + ".labelFeatureBranch { background-color: #000000!important; color: white !important; border-radius: 10px ; padding: 0px 5px 0px 5px; margin-right: 2px; }"
+        + "\n</style>")
 });
 
 function updateIcons() {
@@ -194,7 +194,7 @@ function applyTemplate() {
 }
 
 function getBug() {
-    return $('div[data-type="done"],div[data-type="current"],div[data-type="backlog"],div[data-type="icebox"]').find('.bug').children('.preview').children('.selected').parent();
+    return $('div[data-type="done"],div[data-type="current"],div[data-type="backlog"],div[data-type="icebox"]').find('.bug').children('.preview').children('svg[style*="color: rgb(61, 97, 170);"]').parent();
 }
 
 function getAnalyseTemplate() {
@@ -262,11 +262,11 @@ function getBugTemplate() {
 }
 
 function getChore() {
-    return $('div[data-type="done"],div[data-type="current"],div[data-type="backlog"],div[data-type="icebox"]').find('.chore').children('.preview').children('.selected').parent();
+    return $('div[data-type="done"],div[data-type="current"],div[data-type="backlog"],div[data-type="icebox"]').find('.chore').children('.preview').children('svg[style*="color: rgb(61, 97, 170);"]').parent();
 }
 
 function getFeature() {
-    return $('div[data-type="done"],div[data-type="current"],div[data-type="backlog"],div[data-type="icebox"]').find('.feature').children('.preview').children('.selected').parent();
+    return $('div[data-type="done"],div[data-type="current"],div[data-type="backlog"],div[data-type="icebox"]').find('.feature').children('.preview').children('svg[style*="color: rgb(61, 97, 170);"]').parent();
 }
 
 function getInfoFromUrl(url) {
@@ -802,8 +802,8 @@ $.getBroadcastNote = function() {
 
 $.getIdList = function(){
     var idList = [];
-    $('div[data-type="done"],div[data-type="current"],div[data-type="backlog"],div[data-type="icebox"]').find('.preview').children('.selected').parent().children('.name').each(function(){
-        idList.push($(this).parent().parent().attr("data-id"));
+    $('div[data-type="done"],div[data-type="current"],div[data-type="backlog"],div[data-type="icebox"] *[data-aid="StoryPreviewItem"]').find('svg[style*="color: rgb(61, 97, 170);"]').parent().parent().each(function(){
+        idList.push($(this).attr("data-id"));
     });
     var idString = "";
     for (var i = 0; i < idList.length; i++) {
