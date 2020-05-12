@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Pivotal Tracker Enhanced
 // @namespace    https://www.pivotaltracker.com/
-// @version      0.54
+// @version      0.55
 // @description  Pivotal Tracker enhanced for Omnimed
 // @author       Omnimed
 // @match        https://www.pivotaltracker.com/*
@@ -194,7 +194,7 @@ function applyTemplate() {
 }
 
 function getBug() {
-    return $('div[data-type="done"],div[data-type="current"],div[data-type="backlog"],div[data-type="icebox"]').find('.bug').children('.preview').children('svg[style*="color: rgb(61, 97, 170);"]').parent();
+    return $('div[data-type="done"],div[data-type="current"],div[data-type="backlog"],div[data-type="icebox"]').find('.bug').find('rect[fill*="#FB8D33"]').closest('.preview').parent();
 }
 
 function getAnalyseTemplate() {
@@ -262,11 +262,11 @@ function getBugTemplate() {
 }
 
 function getChore() {
-    return $('div[data-type="done"],div[data-type="current"],div[data-type="backlog"],div[data-type="icebox"]').find('.chore').children('.preview').children('svg[style*="color: rgb(61, 97, 170);"]').parent();
+    return $('div[data-type="done"],div[data-type="current"],div[data-type="backlog"],div[data-type="icebox"]').find('.chore').find('rect[fill*="#FB8D33"]').closest('.preview').parent();
 }
 
 function getFeature() {
-    return $('div[data-type="done"],div[data-type="current"],div[data-type="backlog"],div[data-type="icebox"]').find('.feature').children('.preview').children('svg[style*="color: rgb(61, 97, 170);"]').parent();
+    return $('div[data-type="done"],div[data-type="current"],div[data-type="backlog"],div[data-type="icebox"]').find('.feature').find('rect[fill*="#FB8D33"]').closest('.preview').parent();
 }
 
 function getInfoFromUrl(url) {
@@ -335,7 +335,7 @@ function addReleaseNoteTicketInfo(parameter) {
 function update_bug() {
     sumBug = 0;
     countBug = 0;
-    getBug().children('.meta').each(function(){
+    getBug().find('.meta').each(function(){
         if ($(this).text() != "-1") {
             sumBug += parseFloat($(this).text());
         }
@@ -346,7 +346,7 @@ function update_bug() {
 function update_chore() {
     sumChore = 0;
     countChore = 0;
-    getChore().children('.meta').each(function(){
+    getChore().find('.meta').each(function(){
         if ($(this).text() != "-1") {
             sumChore += parseFloat($(this).text());
         }
@@ -357,7 +357,7 @@ function update_chore() {
 function update_feature() {
     sumStory = 0;
     countStory = 0;
-    getFeature().children('.meta').each(function(){
+    getFeature().find('.meta').each(function(){
         if ($(this).text() != "-1") {
             sumStory += parseFloat($(this).text());
         }
@@ -397,9 +397,9 @@ $.getReleaseNote = function() {
     var eps = [];
     var produits = [];
     var stories = [];
-    getFeature().children('.name').each(function(){
+    getFeature().each(function(){
         var story = {name:"", ep:"", prd:"", id:"", type: "feature"};
-        story.id = $(this).parent().parent().attr("data-id");
+        story.id = $(this).attr("data-id");
         story.prd = $(this).find('.labels a:contains("prd")').text();
         story.name = $(this).find('.story_name .tracker_markup').text();
         if (story.prd === "") {
@@ -423,9 +423,9 @@ $.getReleaseNote = function() {
     });
 
     var chores = [];
-    getChore().children('.name').each(function(){
+    getChore().each(function(){
         var chore = {name:"", prd:"", id:"", type: "chore"};
-        chore.id = $(this).parent().parent().attr("data-id");
+        chore.id = $(this).attr("data-id");
         chore.name = $(this).find('.story_name .tracker_markup').text();
         chore.prd = $(this).find('.labels a:contains("prd")').text();
         if (chore.prd === "") {
@@ -449,9 +449,9 @@ $.getReleaseNote = function() {
     });
 
     var bugs = [];
-    getBug().children('.name').each(function(){
+    getBug().each(function(){
         var bug = {name:"", id:"", type: "bug"};
-        bug.id = $(this).parent().parent().attr("data-id");
+        bug.id = $(this).attr("data-id");
         bug.name = $(this).find('.story_name .tracker_markup').text();
         $(this).find('.labels a:contains("bugprod")').each(function() {
             bugs.push(bug);
@@ -503,9 +503,9 @@ $.getSprintSheet = function() {
     var sprintSheet = "";
     var eps = [];
     var stories = [];
-    getFeature().children('.name').each(function(){
+    getFeature().each(function(){
         var story = {name:"", ep:"", id:""};
-        story.id = $(this).parent().parent().attr("data-id");
+        story.id = $(this).attr("data-id");
         story.name = $(this).find('.story_name .tracker_markup').text();
         story.ep = $(this).find('.labels a:contains("ep -")').text();
         if (story.ep === "") {
@@ -521,9 +521,9 @@ $.getSprintSheet = function() {
     });
 
     var chores = [];
-    getChore().children('.name').each(function(){
+    getChore().each(function(){
         var chore = {name:"", ep:"", id:""};
-        chore.id = $(this).parent().parent().attr("data-id");
+        chore.id = $(this).attr("data-id");
         chore.name = $(this).find('.story_name .tracker_markup').text();
         chore.ep = $(this).find('.labels a:contains("ep -")').text();
         if (chore.ep === "") {
@@ -539,9 +539,9 @@ $.getSprintSheet = function() {
     });
 
     var bugs = [];
-    getBug().children('.name').each(function(){
+    getBug().each(function(){
         var bug = {name:"", id:""};
-        bug.id = $(this).parent().parent().attr("data-id");
+        bug.id = $(this).attr("data-id");
         bug.name = $(this).find('.story_name .tracker_markup').text();
         bugs.push(bug);
     });
@@ -640,9 +640,9 @@ $.getBroadcastNote = function() {
     var togglz = [];
     var version = [];
 
-    getFeature().children('.name').each(function(){
+    getFeature().each(function(){
         var story = {name:"", broadcast:"", ep:"", id:"", version:""};
-        story.id = $(this).parent().parent().attr("data-id");
+        story.id = $(this).attr("data-id");
         story.broadcast = capitalizeFirstLetter($(this).find('.labels a:contains("broadcast")').text());
         if (story.broadcast.indexOf(",") > -1){
             story.broadcast = story.broadcast.substring(0,story.broadcast.indexOf(","));
@@ -676,9 +676,9 @@ $.getBroadcastNote = function() {
     });
 
     var chores = [];
-    getChore().children('.name').each(function(){
+    getChore().each(function(){
         var chore = {name:"", broadcast:"", ep:"", id:"", version: ""};
-        chore.id = $(this).parent().parent().attr("data-id");
+        chore.id = $(this).attr("data-id");
         chore.broadcast = capitalizeFirstLetter($(this).find('.labels a:contains("broadcast")').text());
         if (chore.broadcast.indexOf(",") > -1){
             chore.broadcast = chore.broadcast.substring(0,chore.broadcast.indexOf(","));
@@ -711,9 +711,9 @@ $.getBroadcastNote = function() {
     });
 
     var bugs = [];
-    getBug().children('.name').each(function(){
+    getBug().each(function(){
         var bug = {name:"", broadcast:"", ep:"", id:"", version:""};
-        bug.id = $(this).parent().parent().attr("data-id");
+        bug.id = $(this).attr("data-id");
         bug.broadcast = capitalizeFirstLetter($(this).find('.labels a:contains("broadcast")').text());
         if (bug.broadcast.indexOf(",") > -1){
             bug.broadcast = bug.broadcast.substring(0,bug.broadcast.indexOf(","));
@@ -731,7 +731,7 @@ $.getBroadcastNote = function() {
             bug.version = bug.version.substring(0,bug.version.indexOf(","));
         }
 
-        $(this).children('.labels a:contains("bugprod")').each(function() {
+        $(this).find('.labels a:contains("bugprod")').each(function() {
             bugs.push(bug);
             if (bug.broadcast === "") {
                 togglz.push(bug);
@@ -802,7 +802,7 @@ $.getBroadcastNote = function() {
 
 $.getIdList = function(){
     var idList = [];
-    $('div[data-type="done"],div[data-type="current"],div[data-type="backlog"],div[data-type="icebox"] *[data-aid="StoryPreviewItem"]').find('svg[style*="color: rgb(61, 97, 170);"]').parent().parent().each(function(){
+    $('div[data-type="done"],div[data-type="current"],div[data-type="backlog"],div[data-type="icebox"] *[data-aid="StoryPreviewItem"]').find('rect[fill*="#FB8D33"]').closest('.StoryPreviewItem__clickToExpand').each(function(){
         idList.push($(this).attr("data-id"));
     });
     var idString = "";
