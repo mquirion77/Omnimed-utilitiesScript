@@ -1,13 +1,13 @@
 // ==UserScript==
 // @name         Cucumber pimper
 // @namespace    http://tampermonkey.net/
-// @version      3.6
+// @version      3.7
 // @description  Pimp cucumber reports
 // @author       mquiron, mcormier, nguillet, shenault, marobert
 // @match        https://jenkins.omnimed.com/*job/*/cucumber-html-reports/*overview-tags.html
 // @grant        none
 // ==/UserScript==
-$(document).ready(function () {
+$(document).ready(function() {
 	$("<style type='text/css'> .cukeMoc { background-color: black !important; color: white !important; } </style>").appendTo("head");
 	$("<style type='text/css'> .cukeNic { background-color: red !important; color: white !important; } </style>").appendTo("head");
 	$("<style type='text/css'> .cukeVal { background-color: blue !important; color: white !important; } </style>").appendTo("head");
@@ -59,7 +59,6 @@ function colorCucumberTags() {
 	colorCucumberTagForQA('@AdministrationStatut', qa);
 	colorCucumberTagForQA('@AdministrationVisioconférence', qa);
 	colorCucumberTagForQA('@CentreAdmin', qa);
-	colorCucumberTagForQA('Contact', qa);
 	colorCucumberTagForQA('@Notification', qa);
 	colorCucumberTagForQA('@RecherchePatient', qa);
 	colorCucumberTagForQA('@RendezVous', qa);
@@ -67,6 +66,7 @@ function colorCucumberTags() {
 
 	//Nic
 	qa = 'Nic';
+	colorCucumberTagForQA('Contact', qa);
 	colorCucumberTagForQA('@DsqAcces', qa);
 	colorCucumberTagForQA('@DsqSqii', qa);
 	colorCucumberTagForQA('@DsqSqil', qa);
