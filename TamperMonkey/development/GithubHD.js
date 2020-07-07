@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name       GitHub HD Resolution
 // @namespace
-// @version    2018.10-3
+// @version    2020.07.07-1
 // @description  Welcome to the year 2000s, HD Resolution is here !
 // @match      https://github.com/*
-// @copyright  2019+, Omnimed.com
+// @copyright  2020+, Omnimed.com
 // @require        https://code.jquery.com/jquery-3.3.1.min.js
 // ==/UserScript==
 
@@ -34,7 +34,7 @@ function resize() {
             $('.discussion-timeline.pull-discussion-timeline.js-pull-discussion-timeline.js-quote-selection-container.js-review-state-classes').width('80%');
             $('.container').css('width', '98%');
             $('.tree-browser-result .css-truncate-target').css('max-width', '100%');
-            $('.container-lg, .comment-holder').css({
+            $('.container-lg, .comment-holder, .container-xl').css({
                 'width': '98%',
                 'max-width': '100%'
             });
