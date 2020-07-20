@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Pivotal Tracker Enhanced
 // @namespace    https://www.pivotaltracker.com/
-// @version      0.55
+// @version      0.56
 // @description  Pivotal Tracker enhanced for Omnimed
 // @author       Omnimed
 // @match        https://www.pivotaltracker.com/*
@@ -365,15 +365,11 @@ function update_feature() {
     });
 }
 function executeCopy(text){
-    var copyDiv = document.createElement('div');
-    copyDiv.contentEditable = true;
-    document.body.appendChild(copyDiv);
-    copyDiv.innerText = text;
-    copyDiv.unselectable = "off";
-    copyDiv.focus();
-    document.execCommand('SelectAll');
-    document.execCommand("Copy", false, null);
-    document.body.removeChild(copyDiv);
+    navigator.clipboard.writeText(text).then(function() {
+        console.log('Async: Copying to clipboard was successful!');
+    }, function(err) {
+        console.error('Async: Could not copy text: ', err);
+    });
 }
 
 function update_output() {
@@ -546,6 +542,12 @@ $.getSprintSheet = function() {
         bugs.push(bug);
     });
 
+    sprintSheet += "\n########################################################################";
+    sprintSheet += "\n#                         Documentation Github                         #";
+    sprintSheet += "\n########################################################################\n";
+
+    sprintSheet += "\n== Objectifs:\n\n";
+
     sprintSheet += "\n== Épisodes:\n\n";
     $.each($.unique(eps.sort()), function() {
         var episode = getEpicInfo(this.toString());
@@ -566,8 +568,6 @@ $.getSprintSheet = function() {
         sprintSheet += "* " + this.name + " [https://www.pivotaltracker.com/story/show/" + this.id + "]\n";
     });
 
-    sprintSheet += "\n== Objectifs:\n\n";
-
     $.each($.unique(eps), function() {
         sprintSheet += "\n== " + this + "\n\n";
         var i = 0;
@@ -586,8 +586,12 @@ $.getSprintSheet = function() {
 
     sprintSheet += "\n== Membres de l’équipe:\n\n";
 
-    sprintSheet += "\n== Pour Slack ==\n\n";
+    sprintSheet += "\n########################################################################";
+    sprintSheet += "\n#                              Post Slack                              #";
+    sprintSheet += "\n########################################################################\n";
 
+    sprintSheet += "\n# Objectifs:\n";
+    
     sprintSheet += "\n# Épisodes:\n";
     $.each($.unique(eps.sort()), function() {
         var episode = getEpicInfo(this.toString());
@@ -605,23 +609,21 @@ $.getSprintSheet = function() {
 
     sprintSheet += "\n# Corrections de bogues\n";
     $.each(bugs, function() {
-        sprintSheet += "* " + this.name + " [https://www.pivotaltracker.com/story/show/" + this.id + "]\n";
+        sprintSheet += "* " + this.name + "\n\thttps://www.pivotaltracker.com/story/show/" + this.id + "\n";
     });
-
-    sprintSheet += "\n# Objectifs:\n";
 
     $.each($.unique(eps), function() {
         sprintSheet += "\n## " + this + "\n";
         var i = 0;
         for (i = 0; i < stories.length; i++) {
             if (stories[i].ep == this) {
-                sprintSheet += "* " + stories[i].name + " [https://www.pivotaltracker.com/story/show/" + stories[i].id + "]\n";
+                sprintSheet += "* " + stories[i].name + "\n\thttps://www.pivotaltracker.com/story/show/" + stories[i].id + "\n";
             }
         }
         i = 0;
         for (i = 0; i < chores.length; i++) {
             if (chores[i].ep == this) {
-                sprintSheet += "* " + chores[i].name + " [https://www.pivotaltracker.com/story/show/" + chores[i].id + "]\n";
+                sprintSheet += "* " + chores[i].name + "\n\thttps://www.pivotaltracker.com/story/show/" + chores[i].id + "\n";
             }
         }
     });
